@@ -1,0 +1,1191 @@
+/**
+ * Main Stylesheet
+ * Deliverance Church Management System
+ * 
+ * Contains all custom styles using church colors and branding
+ */
+
+/* =====================================================
+   CSS VARIABLES (Church Colors)
+   ===================================================== */
+:root {
+    --church-red: #ff2400;
+    --church-blue: #03045e;
+    --church-white: #ffffff;
+    --church-red-light: #ff4d33;
+    --church-blue-light: #1e3c72;
+    --church-gray: #6c757d;
+    --church-success: #28a745;
+    --church-warning: #ffc107;
+    --church-danger: #dc3545;
+    --church-info: #17a2b8;
+    --church-light: #f8f9fa;
+    --church-dark: #343a40;
+    
+    /* Shadows */
+    --shadow-sm: 0 0.125rem 0.25rem rgba(3, 4, 94, 0.075);
+    --shadow: 0 0.5rem 1rem rgba(3, 4, 94, 0.15);
+    --shadow-lg: 0 1rem 3rem rgba(3, 4, 94, 0.175);
+    
+    /* Transitions */
+    --transition-base: all 0.3s ease;
+    --transition-fast: all 0.15s ease;
+    --transition-slow: all 0.5s ease;
+    
+    /* Borders */
+    --border-radius: 0.5rem;
+    --border-radius-sm: 0.25rem;
+    --border-radius-lg: 1rem;
+}
+
+/* =====================================================
+   GLOBAL STYLES
+   ===================================================== */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--church-light);
+    color: var(--church-dark);
+    line-height: 1.6;
+}
+
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    color: var(--church-blue);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--church-gray);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--church-blue);
+}
+
+/* =====================================================
+   LAYOUT COMPONENTS
+   ===================================================== */
+
+/* Sidebar Styles */
+.sidebar {
+    background: linear-gradient(135deg, var(--church-blue) 0%, var(--church-blue-light) 100%);
+    min-height: 100vh;
+    width: 250px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    transition: var(--transition-base);
+    box-shadow: var(--shadow-lg);
+}
+
+.sidebar.collapsed {
+    width: 60px;
+}
+
+.sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.8) !important;
+    padding: 0.75rem 1rem;
+    border-radius: var(--border-radius);
+    margin: 2px 8px;
+    transition: var(--transition-base);
+    position: relative;
+    overflow: hidden;
+}
+
+.sidebar .nav-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: var(--transition-base);
+}
+
+.sidebar .nav-link:hover::before {
+    left: 100%;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white !important;
+    transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+}
+
+.sidebar.collapsed .nav-link {
+    text-align: center;
+    padding: 0.75rem 0.5rem;
+}
+
+.sidebar.collapsed .menu-text,
+.sidebar.collapsed .sidebar-title,
+.sidebar.collapsed .sidebar-subtitle,
+.sidebar.collapsed .sidebar-user-info {
+    display: none;
+}
+
+/* Main Content */
+.main-content {
+    margin-left: 250px;
+    transition: var(--transition-base);
+    min-height: 100vh;
+    background: var(--church-light);
+}
+
+.main-content.expanded {
+    margin-left: 60px;
+}
+
+/* =====================================================
+   NAVIGATION COMPONENTS
+   ===================================================== */
+
+.navbar {
+    background: white !important;
+    box-shadow: var(--shadow-sm);
+    border-bottom: 1px solid rgba(3, 4, 94, 0.1);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: var(--church-blue) !important;
+}
+
+/* Dropdown menus */
+.dropdown-menu {
+    border: none;
+    box-shadow: var(--shadow);
+    border-radius: var(--border-radius);
+}
+
+.dropdown-item {
+    padding: 0.75rem 1.25rem;
+    transition: var(--transition-fast);
+}
+
+.dropdown-item:hover {
+    background-color: rgba(3, 4, 94, 0.05);
+    color: var(--church-blue);
+}
+
+/* =====================================================
+   BUTTONS
+   ===================================================== */
+
+/* Church Primary Button */
+.btn-church-primary {
+    background: linear-gradient(135deg, var(--church-red) 0%, var(--church-red-light) 100%);
+    border: none;
+    color: white;
+    font-weight: 500;
+    transition: var(--transition-base);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-church-primary:hover {
+    background: linear-gradient(135deg, var(--church-red-light) 0%, var(--church-red) 100%);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 36, 0, 0.3);
+}
+
+.btn-church-primary:focus {
+    box-shadow: 0 0 0 0.25rem rgba(255, 36, 0, 0.25);
+}
+
+/* Church Secondary Button */
+.btn-church-secondary {
+    background: linear-gradient(135deg, var(--church-blue) 0%, var(--church-blue-light) 100%);
+    border: none;
+    color: white;
+    font-weight: 500;
+    transition: var(--transition-base);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-church-secondary:hover {
+    background: linear-gradient(135deg, var(--church-blue-light) 0%, var(--church-blue) 100%);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(3, 4, 94, 0.3);
+}
+
+/* Button animations */
+.btn {
+    transition: var(--transition-base);
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+/* =====================================================
+   CARDS
+   ===================================================== */
+
+.card {
+    border: none;
+    box-shadow: var(--shadow-sm);
+    border-radius: var(--border-radius-lg);
+    transition: var(--transition-base);
+    overflow: hidden;
+}
+
+.card:hover {
+    box-shadow: var(--shadow);
+    transform: translateY(-2px);
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--church-blue) 0%, var(--church-blue-light) 100%);
+    color: white;
+    border: none;
+    font-weight: 600;
+}
+
+.card-header h5,
+.card-header h6 {
+    color: white;
+    margin-bottom: 0;
+}
+
+/* Stats Cards */
+.stats-card {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-base);
+    position: relative;
+    overflow: hidden;
+}
+
+.stats-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--church-red), var(--church-blue));
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.stats-card .stats-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.stats-card .stats-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--church-blue);
+    margin-bottom: 0.5rem;
+}
+
+.stats-card .stats-label {
+    color: var(--church-gray);
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* =====================================================
+   FORMS
+   ===================================================== */
+
+.form-control {
+    border: 1px solid #e0e6ed;
+    border-radius: var(--border-radius);
+    padding: 0.75rem 1rem;
+    transition: var(--transition-fast);
+}
+
+.form-control:focus {
+    border-color: var(--church-blue);
+    box-shadow: 0 0 0 0.25rem rgba(3, 4, 94, 0.1);
+}
+
+.form-label {
+    font-weight: 500;
+    color: var(--church-blue);
+    margin-bottom: 0.5rem;
+}
+
+.input-group {
+    position: relative;
+}
+
+.input-group-text {
+    background: var(--church-light);
+    border: 1px solid #e0e6ed;
+    color: var(--church-gray);
+}
+
+/* Custom file upload */
+.file-upload-wrapper {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    width: 100%;
+}
+
+.file-upload-wrapper input[type="file"] {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.file-upload-display {
+    border: 2px dashed var(--church-gray);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    text-align: center;
+    transition: var(--transition-base);
+}
+
+.file-upload-display:hover {
+    border-color: var(--church-blue);
+    background: rgba(3, 4, 94, 0.05);
+}
+
+/* =====================================================
+   TABLES
+   ===================================================== */
+
+.table {
+    background: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.table thead th {
+    background: linear-gradient(135deg, var(--church-blue) 0%, var(--church-blue-light) 100%);
+    color: white;
+    border: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.875rem;
+    padding: 1rem 0.75rem;
+}
+
+.table tbody td {
+    padding: 1rem 0.75rem;
+    border-bottom: 1px solid rgba(3, 4, 94, 0.1);
+    vertical-align: middle;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(3, 4, 94, 0.03);
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Table actions */
+.table-actions {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.table-actions .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+/* DataTables customization */
+.dataTables_wrapper .dataTables_filter input {
+    border: 1px solid var(--church-blue);
+    border-radius: var(--border-radius);
+    padding: 0.5rem;
+}
+
+.dataTables_wrapper .dataTables_length select {
+    border: 1px solid var(--church-blue);
+    border-radius: var(--border-radius);
+    padding: 0.5rem;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background: var(--church-blue) !important;
+    border-color: var(--church-blue) !important;
+    color: white !important;
+}
+
+/* =====================================================
+   ALERTS
+   ===================================================== */
+
+.alert {
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 1rem 1.25rem;
+    border-left: 4px solid;
+}
+
+.alert-success {
+    background: rgba(40, 167, 69, 0.1);
+    border-left-color: var(--church-success);
+    color: #155724;
+}
+
+.alert-danger {
+    background: rgba(220, 53, 69, 0.1);
+    border-left-color: var(--church-danger);
+    color: #721c24;
+}
+
+.alert-warning {
+    background: rgba(255, 193, 7, 0.1);
+    border-left-color: var(--church-warning);
+    color: #856404;
+}
+
+.alert-info {
+    background: rgba(23, 162, 184, 0.1);
+    border-left-color: var(--church-info);
+    color: #0c5460;
+}
+
+/* =====================================================
+   BADGES
+   ===================================================== */
+
+.badge {
+    font-weight: 500;
+    font-size: 0.75rem;
+    padding: 0.5em 0.75em;
+    border-radius: var(--border-radius-sm);
+}
+
+.badge-church-red {
+    background: var(--church-red);
+    color: white;
+}
+
+.badge-church-blue {
+    background: var(--church-blue);
+    color: white;
+}
+
+/* Status badges */
+.status-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-active {
+    background: rgba(40, 167, 69, 0.1);
+    color: var(--church-success);
+    border: 1px solid rgba(40, 167, 69, 0.2);
+}
+
+.status-inactive {
+    background: rgba(108, 117, 125, 0.1);
+    color: var(--church-gray);
+    border: 1px solid rgba(108, 117, 125, 0.2);
+}
+
+.status-pending {
+    background: rgba(255, 193, 7, 0.1);
+    color: #856404;
+    border: 1px solid rgba(255, 193, 7, 0.2);
+}
+
+.status-completed {
+    background: rgba(40, 167, 69, 0.1);
+    color: var(--church-success);
+    border: 1px solid rgba(40, 167, 69, 0.2);
+}
+
+.status-failed {
+    background: rgba(220, 53, 69, 0.1);
+    color: var(--church-danger);
+    border: 1px solid rgba(220, 53, 69, 0.2);
+}
+
+/* =====================================================
+   MODALS
+   ===================================================== */
+
+.modal-content {
+    border: none;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, var(--church-blue) 0%, var(--church-blue-light) 100%);
+    color: white;
+    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+    border: none;
+}
+
+.modal-header .modal-title {
+    font-weight: 600;
+}
+
+.modal-header .btn-close {
+    filter: invert(1);
+}
+
+.modal-footer {
+    border: none;
+    padding-top: 0;
+}
+
+/* =====================================================
+   PAGINATION
+   ===================================================== */
+
+.pagination {
+    gap: 0.25rem;
+}
+
+.page-link {
+    border: 1px solid rgba(3, 4, 94, 0.2);
+    color: var(--church-blue);
+    padding: 0.5rem 0.75rem;
+    transition: var(--transition-fast);
+    border-radius: var(--border-radius) !important;
+    margin: 0 2px;
+}
+
+.page-link:hover {
+    background: var(--church-blue);
+    border-color: var(--church-blue);
+    color: white;
+}
+
+.page-item.active .page-link {
+    background: var(--church-red);
+    border-color: var(--church-red);
+    color: white;
+}
+
+/* =====================================================
+   PROGRESS BARS
+   ===================================================== */
+
+.progress {
+    height: 8px;
+    background: rgba(3, 4, 94, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    background: linear-gradient(90deg, var(--church-red), var(--church-blue));
+    transition: width 0.6s ease;
+}
+
+/* =====================================================
+   CHARTS AND WIDGETS
+   ===================================================== */
+
+.chart-container {
+    position: relative;
+    background: white;
+    border-radius: var(--border-radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 2rem;
+}
+
+.chart-container canvas {
+    max-height: 300px;
+}
+
+.widget {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-base);
+}
+
+.widget:hover {
+    box-shadow: var(--shadow);
+    transform: translateY(-2px);
+}
+
+.widget-header {
+    display: flex;
+    align-items: center;
+    justify-content: between;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(3, 4, 94, 0.1);
+}
+
+.widget-title {
+    font-weight: 600;
+    color: var(--church-blue);
+    margin: 0;
+}
+
+.widget-icon {
+    background: linear-gradient(135deg, var(--church-red), var(--church-blue));
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+}
+
+/* =====================================================
+   UTILITY CLASSES
+   ===================================================== */
+
+/* Text colors */
+.text-church-red { color: var(--church-red) !important; }
+.text-church-blue { color: var(--church-blue) !important; }
+.text-church-gray { color: var(--church-gray) !important; }
+
+/* Background colors */
+.bg-church-red { background-color: var(--church-red) !important; }
+.bg-church-blue { background-color: var(--church-blue) !important; }
+.bg-church-light { background-color: var(--church-light) !important; }
+
+/* Gradients */
+.bg-gradient-church {
+    background: linear-gradient(135deg, var(--church-red) 0%, var(--church-blue) 100%);
+    color: white;
+}
+
+.bg-gradient-church-reverse {
+    background: linear-gradient(135deg, var(--church-blue) 0%, var(--church-red) 100%);
+    color: white;
+}
+
+/* Shadows */
+.shadow-church-sm { box-shadow: var(--shadow-sm); }
+.shadow-church { box-shadow: var(--shadow); }
+.shadow-church-lg { box-shadow: var(--shadow-lg); }
+
+/* Borders */
+.border-church-red { border-color: var(--church-red) !important; }
+.border-church-blue { border-color: var(--church-blue) !important; }
+
+/* Animations */
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+.animate-slide-up {
+    animation: slideUp 0.5s ease-out;
+}
+
+.animate-bounce-in {
+    animation: bounceIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Hover effects */
+.hover-lift {
+    transition: var(--transition-base);
+}
+
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.hover-glow {
+    transition: var(--transition-base);
+}
+
+.hover-glow:hover {
+    box-shadow: 0 0 20px rgba(3, 4, 94, 0.3);
+}
+
+/* =====================================================
+   LOGIN PAGE STYLES
+   ===================================================== */
+
+.login-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--church-blue) 0%, var(--church-blue-light) 50%, var(--church-red) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.login-card {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    max-width: 400px;
+    width: 100%;
+}
+
+.login-header {
+    background: linear-gradient(135deg, var(--church-blue) 0%, var(--church-blue-light) 100%);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+}
+
+.login-header i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.login-body {
+    padding: 2rem;
+}
+
+.login-footer {
+    background: var(--church-light);
+    padding: 1rem 2rem;
+    text-align: center;
+    border-top: 1px solid rgba(3, 4, 94, 0.1);
+}
+
+/* =====================================================
+   DASHBOARD SPECIFIC STYLES
+   ===================================================== */
+
+.dashboard-welcome {
+    background: linear-gradient(135deg, var(--church-blue) 0%, var(--church-blue-light) 100%);
+    color: white;
+    border-radius: var(--border-radius-lg);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.dashboard-welcome::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: rotate(45deg);
+}
+
+.dashboard-welcome::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -10%;
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 36, 0, 0.2);
+    border-radius: 50%;
+}
+
+.quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.quick-action-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-base);
+    border-left: 4px solid;
+}
+
+.quick-action-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow);
+    text-decoration: none;
+    color: inherit;
+}
+
+.quick-action-card.action-primary { border-left-color: var(--church-blue); }
+.quick-action-card.action-success { border-left-color: var(--church-success); }
+.quick-action-card.action-warning { border-left-color: var(--church-warning); }
+.quick-action-card.action-danger { border-left-color: var(--church-danger); }
+.quick-action-card.action-info { border-left-color: var(--church-info); }
+
+.quick-action-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+/* =====================================================
+   RESPONSIVE DESIGN
+   ===================================================== */
+
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        width: 250px;
+    }
+    
+    .sidebar.show {
+        transform: translateX(0);
+    }
+    
+    .main-content {
+        margin-left: 0;
+    }
+    
+    .main-content.sidebar-open {
+        margin-left: 0;
+        position: relative;
+    }
+    
+    .main-content.sidebar-open::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+    
+    footer {
+        margin-left: 0 !important;
+    }
+    
+    .stats-card {
+        text-align: center;
+    }
+    
+    .table-responsive {
+        border-radius: var(--border-radius);
+    }
+    
+    .quick-actions-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 0.75rem;
+    }
+    
+    .dashboard-welcome {
+        padding: 1.5rem;
+        text-align: center;
+    }
+    
+    .chart-container {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .container-fluid {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .btn {
+        font-size: 0.875rem;
+        padding: 0.5rem 1rem;
+    }
+    
+    .stats-card .stats-number {
+        font-size: 1.5rem;
+    }
+    
+    .login-container {
+        padding: 1rem;
+    }
+    
+    .login-header,
+    .login-body {
+        padding: 1.5rem;
+    }
+    
+    .table-actions {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    
+    .table-actions .btn {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+    }
+}
+
+/* =====================================================
+   PRINT STYLES
+   ===================================================== */
+
+@media print {
+    .sidebar,
+    .navbar,
+    footer,
+    .btn,
+    .no-print,
+    .dropdown,
+    .badge,
+    .alert {
+        display: none !important;
+    }
+    
+    .main-content {
+        margin-left: 0 !important;
+        box-shadow: none !important;
+    }
+    
+    body {
+        background: white !important;
+        color: black !important;
+        font-size: 12pt;
+        line-height: 1.4;
+    }
+    
+    .card,
+    .widget {
+        border: 1px solid #000 !important;
+        box-shadow: none !important;
+        break-inside: avoid;
+        margin-bottom: 1rem;
+    }
+    
+    .card-header {
+        background: #f0f0f0 !important;
+        color: black !important;
+        border-bottom: 2px solid black !important;
+    }
+    
+    .table {
+        border-collapse: collapse !important;
+        border: 1px solid black !important;
+    }
+    
+    .table th,
+    .table td {
+        border: 1px solid black !important;
+        padding: 8px !important;
+        font-size: 11pt;
+    }
+    
+    .table thead th {
+        background: #f0f0f0 !important;
+        color: black !important;
+        font-weight: bold !important;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        color: black !important;
+        break-after: avoid;
+    }
+    
+    .stats-card {
+        border: 1px solid black !important;
+        padding: 1rem !important;
+    }
+    
+    .stats-number {
+        color: black !important;
+    }
+    
+    .page-break {
+        page-break-before: always;
+    }
+    
+    .avoid-break {
+        break-inside: avoid;
+    }
+}
+
+/* =====================================================
+   DARK MODE SUPPORT (Future Enhancement)
+   ===================================================== */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --church-light: #1a1a1a;
+        --church-dark: #ffffff;
+    }
+    
+    /* This will be expanded when dark mode is implemented */
+}
+
+/* =====================================================
+   LOADING ANIMATIONS
+   ===================================================== */
+
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+.loading-spinner.spinner-church {
+    border-color: rgba(3, 4, 94, 0.3);
+    border-top-color: var(--church-blue);
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-dots {
+    display: inline-block;
+}
+
+.loading-dots::after {
+    content: '';
+    animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
+}
+
+/* =====================================================
+   ACCESSIBILITY IMPROVEMENTS
+   ===================================================== */
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: var(--church-blue);
+    color: white;
+    padding: 8px;
+    text-decoration: none;
+    border-radius: 4px;
+    z-index: 10000;
+}
+
+.skip-link:focus {
+    top: 6px;
+}
+
+/* Focus styles */
+.btn:focus,
+.form-control:focus,
+.nav-link:focus {
+    outline: 2px solid var(--church-blue);
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .card,
+    .table,
+    .form-control {
+        border-width: 2px;
+    }
+    
+    .btn {
+        border-width: 2px;
+        font-weight: bold;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

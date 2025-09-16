@@ -1,0 +1,386 @@
+[29-Aug-2025 14:42:12 Africa/Nairobi] PHP Fatal error:  Uncaught Error: Call to undefined method Database::getInstance() in C:\xampp\htdocs\church-cms\includes\functions.php:194
+Stack trace:
+#0 C:\xampp\htdocs\church-cms\auth\login.php(147): getRecord('church_info', 'id', 1)
+#1 {main}
+  thrown in C:\xampp\htdocs\church-cms\includes\functions.php on line 194
+[29-Aug-2025 14:48:26 Africa/Nairobi] PHP Fatal error:  Uncaught Error: Call to undefined method Database::getInstance() in C:\xampp\htdocs\church-cms\includes\functions.php:194
+Stack trace:
+#0 C:\xampp\htdocs\church-cms\auth\login.php(147): getRecord('church_info', 'id', 1)
+#1 {main}
+  thrown in C:\xampp\htdocs\church-cms\includes\functions.php on line 194
+[29-Aug-2025 14:48:30 Africa/Nairobi] PHP Fatal error:  Uncaught Error: Call to undefined method Database::getInstance() in C:\xampp\htdocs\church-cms\includes\functions.php:194
+Stack trace:
+#0 C:\xampp\htdocs\church-cms\auth\login.php(147): getRecord('church_info', 'id', 1)
+#1 {main}
+  thrown in C:\xampp\htdocs\church-cms\includes\functions.php on line 194
+[29-Aug-2025 14:48:34 Africa/Nairobi] PHP Fatal error:  Uncaught Error: Call to undefined method Database::getInstance() in C:\xampp\htdocs\church-cms\includes\functions.php:194
+Stack trace:
+#0 C:\xampp\htdocs\church-cms\auth\login.php(147): getRecord('church_info', 'id', 1)
+#1 {main}
+  thrown in C:\xampp\htdocs\church-cms\includes\functions.php on line 194
+[29-Aug-2025 14:48:38 Africa/Nairobi] PHP Fatal error:  Uncaught Error: Call to undefined method Database::getInstance() in C:\xampp\htdocs\church-cms\includes\functions.php:194
+Stack trace:
+#0 C:\xampp\htdocs\church-cms\auth\login.php(147): getRecord('church_info', 'id', 1)
+#1 {main}
+  thrown in C:\xampp\htdocs\church-cms\includes\functions.php on line 194
+[29-Aug-2025 14:48:54 Africa/Nairobi] PHP Fatal error:  Uncaught Error: Call to undefined method Database::getInstance() in C:\xampp\htdocs\church-cms\includes\functions.php:194
+Stack trace:
+#0 C:\xampp\htdocs\church-cms\auth\login.php(147): getRecord('church_info', 'id', 1)
+#1 {main}
+  thrown in C:\xampp\htdocs\church-cms\includes\functions.php on line 194
+[29-Aug-2025 14:50:39 Africa/Nairobi] PHP Fatal error:  Uncaught Error: Call to undefined method Database::getInstance() in C:\xampp\htdocs\church-cms\includes\functions.php:194
+Stack trace:
+#0 C:\xampp\htdocs\church-cms\auth\login.php(147): getRecord('church_info', 'id', 1)
+#1 {main}
+  thrown in C:\xampp\htdocs\church-cms\includes\functions.php on line 194
+[29-Aug-2025 15:00:02 Africa/Nairobi] ✅ Database connected successfully at 2025-08-29 15:00:02
+[29-Aug-2025 15:05:08 Africa/Nairobi] ✅ Database connected successfully at 2025-08-29 15:05:08
+[29-Aug-2025 15:21:11 Africa/Nairobi] ✅ Database connected successfully at 2025-08-29 15:21:11
+[29-Aug-2025 15:21:31 Africa/Nairobi] ✅ Database connected successfully at 2025-08-29 15:21:31
+[29-Aug-2025 15:21:46 Africa/Nairobi] ✅ Database connected successfully at 2025-08-29 15:21:46
+[29-Aug-2025 15:37:30 Africa/Nairobi] ✅ Database connected successfully at 2025-08-29 15:37:30
+[29-Aug-2025 15:37:37 Africa/Nairobi] ✅ Database connected successfully at 2025-08-29 15:37:37
+[29-Aug-2025 15:37:46 Africa/Nairobi] ✅ Database connected successfully at 2025-08-29 15:37:46
+[29-Aug-2025 16:18:30 Africa/Nairobi] ✅ Database connected successfully at 2025-08-29 16:18:30
+[29-Aug-2025 16:18:30 Africa/Nairobi] ✅ Database connected successfully at 2025-08-29 16:18:30
+[29-Aug-2025 16:19:30 Africa/Nairobi] ✅ Database connected successfully at 2025-08-29 16:19:30
+[29-Aug-2025 16:19:33 Africa/Nairobi] ✅ Database connected successfully at 2025-08-29 16:19:33
+[29-Aug-2025 16:20:16 Africa/Nairobi] ✅ Database connected successfully at 2025-08-29 16:20:16
+[29-Aug-2025 16:21:36 Africa/Nairobi] ✅ Database connected successfully at 2025-08-29 16:21:36
+[29-Aug-2025 16:21:45 Africa/Nairobi] ✅ Database connected successfully at 2025-08-29 16:21:45
+[29-Aug-2025 16:21:47 Africa/Nairobi] ✅ Database connected successfully at 2025-08-29 16:21:47
+[29-Aug-2025 16:21:54 Africa/Nairobi] ✅ Database connected successfully at 2025-08-29 16:21:54
+[29-Aug-2025 16:22:09 Africa/Nairobi] ✅ Database connected successfully at 2025-08-29 16:22:09
+[29-Aug-2025 16:22:14 Africa/Nairobi] ✅ Database connected successfully at 2025-08-29 16:22:14
+[29-Aug-2025 17:06:52 Africa/Nairobi] ✅ Database connected successfully at 2025-08-29 17:06:52
+[29-Aug-2025 18:06:54 Africa/Nairobi] ✅ Database connected successfully at 2025-08-29 18:06:54
+[29-Aug-2025 18:06:54 Africa/Nairobi] PHP Warning:  session_destroy(): Trying to destroy uninitialized session in C:\xampp\htdocs\church-cms\includes\functions.php on line 178
+[29-Aug-2025 18:06:54 Africa/Nairobi] ✅ Database connected successfully at 2025-08-29 18:06:54
+[29-Aug-2025 21:12:16 Africa/Nairobi] ✅ Database connected successfully at 2025-08-29 21:12:16
+[29-Aug-2025 23:25:34 Africa/Nairobi] ✅ Database connected successfully at 2025-08-29 23:25:34
+[29-Aug-2025 23:25:35 Africa/Nairobi] ✅ Database connected successfully at 2025-08-29 23:25:35
+[29-Aug-2025 23:25:57 Africa/Nairobi] ✅ Database connected successfully at 2025-08-29 23:25:57
+[29-Aug-2025 23:25:59 Africa/Nairobi] ✅ Database connected successfully at 2025-08-29 23:25:59
+[30-Aug-2025 00:25:59 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 00:25:59
+[30-Aug-2025 00:26:00 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 00:26:00
+[30-Aug-2025 20:09:05 Africa/Nairobi] ❌ Database connection error: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[30-Aug-2025 20:09:16 Africa/Nairobi] ❌ Database connection error: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[30-Aug-2025 20:09:29 Africa/Nairobi] ❌ Database connection error: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[30-Aug-2025 20:10:10 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 20:10:10
+[30-Aug-2025 20:10:21 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 20:10:21
+[30-Aug-2025 20:10:21 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 20:10:21
+[30-Aug-2025 20:10:54 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 20:10:54
+[30-Aug-2025 20:10:58 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 20:10:58
+[30-Aug-2025 20:11:07 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 20:11:07
+[30-Aug-2025 20:11:10 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 20:11:10
+[30-Aug-2025 20:11:13 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 20:11:13
+[30-Aug-2025 20:11:31 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 20:11:31
+[30-Aug-2025 20:11:33 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 20:11:33
+[30-Aug-2025 20:12:06 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 20:12:06
+[30-Aug-2025 20:12:17 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 20:12:17
+[30-Aug-2025 20:12:42 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 20:12:42
+[30-Aug-2025 20:14:33 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 20:14:33
+[30-Aug-2025 20:15:39 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 20:15:39
+[30-Aug-2025 20:16:06 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 20:16:06
+[30-Aug-2025 20:16:13 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 20:16:13
+[30-Aug-2025 20:16:19 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 20:16:19
+[30-Aug-2025 21:16:31 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 21:16:31
+[30-Aug-2025 21:16:31 Africa/Nairobi] PHP Warning:  session_destroy(): Trying to destroy uninitialized session in C:\xampp\htdocs\church-cms\includes\functions.php on line 178
+[30-Aug-2025 21:16:31 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 21:16:31
+[30-Aug-2025 23:50:29 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:50:29
+[30-Aug-2025 23:50:29 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:50:29
+[30-Aug-2025 23:50:45 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:50:45
+[30-Aug-2025 23:50:45 Africa/Nairobi] ❌ Query execution error: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ? AND visit_date <= = ?' at line 1 | Query: SELECT COUNT(*) as count FROM visitors WHERE visit_date >= = ? AND visit_date <= = ?
+[30-Aug-2025 23:50:45 Africa/Nairobi] Error getting record count: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ? AND visit_date <= = ?' at line 1
+[30-Aug-2025 23:50:45 Africa/Nairobi] PHP Warning:  require_once(../../config/config.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\church-cms\modules\dashboard\index.php on line 9
+[30-Aug-2025 23:50:45 Africa/Nairobi] PHP Fatal error:  Uncaught Error: Failed opening required '../../config/config.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\church-cms\modules\dashboard\index.php:9
+Stack trace:
+#0 C:\xampp\htdocs\church-cms\index.php(47): include()
+#1 {main}
+  thrown in C:\xampp\htdocs\church-cms\modules\dashboard\index.php on line 9
+[30-Aug-2025 23:50:57 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:50:57
+[30-Aug-2025 23:50:57 Africa/Nairobi] ❌ Query execution error: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ? AND visit_date <= = ?' at line 1 | Query: SELECT COUNT(*) as count FROM visitors WHERE visit_date >= = ? AND visit_date <= = ?
+[30-Aug-2025 23:50:57 Africa/Nairobi] Error getting record count: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ? AND visit_date <= = ?' at line 1
+[30-Aug-2025 23:50:57 Africa/Nairobi] PHP Warning:  require_once(../../config/config.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\church-cms\modules\dashboard\index.php on line 9
+[30-Aug-2025 23:50:57 Africa/Nairobi] PHP Fatal error:  Uncaught Error: Failed opening required '../../config/config.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\church-cms\modules\dashboard\index.php:9
+Stack trace:
+#0 C:\xampp\htdocs\church-cms\index.php(47): include()
+#1 {main}
+  thrown in C:\xampp\htdocs\church-cms\modules\dashboard\index.php on line 9
+[30-Aug-2025 23:50:59 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:50:59
+[30-Aug-2025 23:50:59 Africa/Nairobi] ❌ Query execution error: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ? AND visit_date <= = ?' at line 1 | Query: SELECT COUNT(*) as count FROM visitors WHERE visit_date >= = ? AND visit_date <= = ?
+[30-Aug-2025 23:50:59 Africa/Nairobi] Error getting record count: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ? AND visit_date <= = ?' at line 1
+[30-Aug-2025 23:50:59 Africa/Nairobi] PHP Warning:  require_once(../../config/config.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\church-cms\modules\dashboard\index.php on line 9
+[30-Aug-2025 23:50:59 Africa/Nairobi] PHP Fatal error:  Uncaught Error: Failed opening required '../../config/config.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\church-cms\modules\dashboard\index.php:9
+Stack trace:
+#0 C:\xampp\htdocs\church-cms\index.php(47): include()
+#1 {main}
+  thrown in C:\xampp\htdocs\church-cms\modules\dashboard\index.php on line 9
+[30-Aug-2025 23:50:59 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:50:59
+[30-Aug-2025 23:50:59 Africa/Nairobi] ❌ Query execution error: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ? AND visit_date <= = ?' at line 1 | Query: SELECT COUNT(*) as count FROM visitors WHERE visit_date >= = ? AND visit_date <= = ?
+[30-Aug-2025 23:50:59 Africa/Nairobi] Error getting record count: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ? AND visit_date <= = ?' at line 1
+[30-Aug-2025 23:50:59 Africa/Nairobi] PHP Warning:  require_once(../../config/config.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\church-cms\modules\dashboard\index.php on line 9
+[30-Aug-2025 23:50:59 Africa/Nairobi] PHP Fatal error:  Uncaught Error: Failed opening required '../../config/config.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\church-cms\modules\dashboard\index.php:9
+Stack trace:
+#0 C:\xampp\htdocs\church-cms\index.php(47): include()
+#1 {main}
+  thrown in C:\xampp\htdocs\church-cms\modules\dashboard\index.php on line 9
+[30-Aug-2025 23:51:00 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:51:00
+[30-Aug-2025 23:51:00 Africa/Nairobi] ❌ Query execution error: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ? AND visit_date <= = ?' at line 1 | Query: SELECT COUNT(*) as count FROM visitors WHERE visit_date >= = ? AND visit_date <= = ?
+[30-Aug-2025 23:51:00 Africa/Nairobi] Error getting record count: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ? AND visit_date <= = ?' at line 1
+[30-Aug-2025 23:51:00 Africa/Nairobi] PHP Warning:  require_once(../../config/config.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\church-cms\modules\dashboard\index.php on line 9
+[30-Aug-2025 23:51:00 Africa/Nairobi] PHP Fatal error:  Uncaught Error: Failed opening required '../../config/config.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\church-cms\modules\dashboard\index.php:9
+Stack trace:
+#0 C:\xampp\htdocs\church-cms\index.php(47): include()
+#1 {main}
+  thrown in C:\xampp\htdocs\church-cms\modules\dashboard\index.php on line 9
+[30-Aug-2025 23:51:06 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:51:06
+[30-Aug-2025 23:51:06 Africa/Nairobi] ❌ Query execution error: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ? AND visit_date <= = ?' at line 1 | Query: SELECT COUNT(*) as count FROM visitors WHERE visit_date >= = ? AND visit_date <= = ?
+[30-Aug-2025 23:51:06 Africa/Nairobi] Error getting record count: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ? AND visit_date <= = ?' at line 1
+[30-Aug-2025 23:51:06 Africa/Nairobi] PHP Warning:  require_once(../../config/config.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\church-cms\modules\dashboard\index.php on line 9
+[30-Aug-2025 23:51:06 Africa/Nairobi] PHP Fatal error:  Uncaught Error: Failed opening required '../../config/config.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\church-cms\modules\dashboard\index.php:9
+Stack trace:
+#0 C:\xampp\htdocs\church-cms\index.php(47): include()
+#1 {main}
+  thrown in C:\xampp\htdocs\church-cms\modules\dashboard\index.php on line 9
+[30-Aug-2025 23:51:21 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:51:21
+[30-Aug-2025 23:51:21 Africa/Nairobi] ❌ Query execution error: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ? AND visit_date <= = ?' at line 1 | Query: SELECT COUNT(*) as count FROM visitors WHERE visit_date >= = ? AND visit_date <= = ?
+[30-Aug-2025 23:51:21 Africa/Nairobi] Error getting record count: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ? AND visit_date <= = ?' at line 1
+[30-Aug-2025 23:51:21 Africa/Nairobi] PHP Warning:  require_once(../../config/config.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\church-cms\modules\dashboard\index.php on line 9
+[30-Aug-2025 23:51:21 Africa/Nairobi] PHP Fatal error:  Uncaught Error: Failed opening required '../../config/config.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\church-cms\modules\dashboard\index.php:9
+Stack trace:
+#0 C:\xampp\htdocs\church-cms\index.php(47): include()
+#1 {main}
+  thrown in C:\xampp\htdocs\church-cms\modules\dashboard\index.php on line 9
+[30-Aug-2025 23:51:27 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:51:27
+[30-Aug-2025 23:51:29 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:51:29
+[30-Aug-2025 23:51:30 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:51:30
+[30-Aug-2025 23:51:31 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:51:31
+[30-Aug-2025 23:51:31 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:51:31
+[30-Aug-2025 23:51:31 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:51:31
+[30-Aug-2025 23:51:31 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:51:31
+[30-Aug-2025 23:51:31 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:51:31
+[30-Aug-2025 23:51:31 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:51:31
+[30-Aug-2025 23:51:32 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:51:32
+[30-Aug-2025 23:51:32 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:51:32
+[30-Aug-2025 23:51:33 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:51:33
+[30-Aug-2025 23:51:33 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:51:33
+[30-Aug-2025 23:51:33 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:51:33
+[30-Aug-2025 23:51:34 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:51:34
+[30-Aug-2025 23:51:34 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:51:34
+[30-Aug-2025 23:51:34 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:51:34
+[30-Aug-2025 23:51:34 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:51:34
+[30-Aug-2025 23:51:35 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:51:35
+[30-Aug-2025 23:51:35 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:51:35
+[30-Aug-2025 23:51:35 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:51:35
+[30-Aug-2025 23:51:45 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:51:45
+[30-Aug-2025 23:51:45 Africa/Nairobi] ❌ Query execution error: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ? AND visit_date <= = ?' at line 1 | Query: SELECT COUNT(*) as count FROM visitors WHERE visit_date >= = ? AND visit_date <= = ?
+[30-Aug-2025 23:51:45 Africa/Nairobi] Error getting record count: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ? AND visit_date <= = ?' at line 1
+[30-Aug-2025 23:51:45 Africa/Nairobi] PHP Warning:  require_once(../../config/config.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\church-cms\modules\dashboard\index.php on line 9
+[30-Aug-2025 23:51:45 Africa/Nairobi] PHP Fatal error:  Uncaught Error: Failed opening required '../../config/config.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\church-cms\modules\dashboard\index.php:9
+Stack trace:
+#0 C:\xampp\htdocs\church-cms\index.php(47): include()
+#1 {main}
+  thrown in C:\xampp\htdocs\church-cms\modules\dashboard\index.php on line 9
+[30-Aug-2025 23:51:46 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:51:46
+[30-Aug-2025 23:51:46 Africa/Nairobi] ❌ Query execution error: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ? AND visit_date <= = ?' at line 1 | Query: SELECT COUNT(*) as count FROM visitors WHERE visit_date >= = ? AND visit_date <= = ?
+[30-Aug-2025 23:51:46 Africa/Nairobi] Error getting record count: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ? AND visit_date <= = ?' at line 1
+[30-Aug-2025 23:51:46 Africa/Nairobi] PHP Warning:  require_once(../../config/config.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\church-cms\modules\dashboard\index.php on line 9
+[30-Aug-2025 23:51:46 Africa/Nairobi] PHP Fatal error:  Uncaught Error: Failed opening required '../../config/config.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\church-cms\modules\dashboard\index.php:9
+Stack trace:
+#0 C:\xampp\htdocs\church-cms\index.php(47): include()
+#1 {main}
+  thrown in C:\xampp\htdocs\church-cms\modules\dashboard\index.php on line 9
+[30-Aug-2025 23:51:52 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:51:52
+[30-Aug-2025 23:53:51 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:53:51
+[30-Aug-2025 23:54:34 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:54:34
+[30-Aug-2025 23:55:01 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:55:01
+[30-Aug-2025 23:55:06 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:55:06
+[30-Aug-2025 23:55:12 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:55:12
+[30-Aug-2025 23:55:53 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:55:53
+[30-Aug-2025 23:56:51 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:56:51
+[30-Aug-2025 23:59:05 Africa/Nairobi] ✅ Database connected successfully at 2025-08-30 23:59:05
+[31-Aug-2025 00:01:44 Africa/Nairobi] ✅ Database connected successfully at 2025-08-31 00:01:44
+[01-Sep-2025 09:45:07 Africa/Nairobi] ✅ Database connected successfully at 2025-09-01 09:45:07
+[01-Sep-2025 09:45:07 Africa/Nairobi] PHP Warning:  session_destroy(): Trying to destroy uninitialized session in C:\xampp\htdocs\church-cms\includes\functions.php on line 178
+[01-Sep-2025 09:45:07 Africa/Nairobi] ✅ Database connected successfully at 2025-09-01 09:45:07
+[04-Sep-2025 23:34:38 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:34:38
+[04-Sep-2025 23:34:57 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:34:57
+[04-Sep-2025 23:35:08 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:35:08
+[04-Sep-2025 23:35:08 Africa/Nairobi] ❌ Query execution error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'remember_token' in 'field list' | Query: UPDATE users SET remember_token = ? WHERE id = ?
+[04-Sep-2025 23:35:08 Africa/Nairobi] Login error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'remember_token' in 'field list'
+[04-Sep-2025 23:35:22 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:35:22
+[04-Sep-2025 23:35:41 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:35:41
+[04-Sep-2025 23:36:08 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:36:08
+[04-Sep-2025 23:36:15 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:36:15
+[04-Sep-2025 23:36:18 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:36:18
+[04-Sep-2025 23:36:24 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:36:24
+[04-Sep-2025 23:36:28 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:36:28
+[04-Sep-2025 23:36:39 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:36:39
+[04-Sep-2025 23:36:43 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:36:43
+[04-Sep-2025 23:37:24 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:37:24
+[04-Sep-2025 23:37:24 Africa/Nairobi] PHP Fatal error:  Uncaught Error: Undefined constant "CHURCH_INFO" in C:\xampp\htdocs\church-cms\modules\attendance\index.php:531
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\church-cms\modules\attendance\index.php on line 531
+[04-Sep-2025 23:37:29 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:37:29
+[04-Sep-2025 23:37:29 Africa/Nairobi] PHP Warning:  include(reports/summary_report.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\church-cms\modules\attendance\reports.php on line 194
+[04-Sep-2025 23:37:29 Africa/Nairobi] PHP Warning:  include(): Failed opening 'reports/summary_report.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\church-cms\modules\attendance\reports.php on line 194
+[04-Sep-2025 23:37:52 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:37:52
+[04-Sep-2025 23:37:52 Africa/Nairobi] PHP Warning:  include(reports/summary_report.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\church-cms\modules\attendance\reports.php on line 194
+[04-Sep-2025 23:37:52 Africa/Nairobi] PHP Warning:  include(): Failed opening 'reports/summary_report.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\church-cms\modules\attendance\reports.php on line 194
+[04-Sep-2025 23:38:18 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:38:18
+[04-Sep-2025 23:38:18 Africa/Nairobi] PHP Fatal error:  Uncaught Error: Undefined constant "CHURCH_INFO" in C:\xampp\htdocs\church-cms\modules\attendance\index.php:531
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\church-cms\modules\attendance\index.php on line 531
+[04-Sep-2025 23:38:21 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:38:21
+[04-Sep-2025 23:38:36 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:38:36
+[04-Sep-2025 23:38:36 Africa/Nairobi] PHP Fatal error:  Uncaught Error: Undefined constant "CHURCH_INFO" in C:\xampp\htdocs\church-cms\modules\attendance\index.php:531
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\church-cms\modules\attendance\index.php on line 531
+[04-Sep-2025 23:38:37 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:38:37
+[04-Sep-2025 23:38:54 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:38:54
+[04-Sep-2025 23:38:54 Africa/Nairobi] PHP Warning:  include(reports/summary_report.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\church-cms\modules\attendance\reports.php on line 194
+[04-Sep-2025 23:38:54 Africa/Nairobi] PHP Warning:  include(): Failed opening 'reports/summary_report.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\church-cms\modules\attendance\reports.php on line 194
+[04-Sep-2025 23:38:57 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:38:57
+[04-Sep-2025 23:39:15 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:39:15
+[04-Sep-2025 23:39:15 Africa/Nairobi] PHP Fatal error:  Uncaught Error: Call to undefined method Database::inTransaction() in C:\xampp\htdocs\church-cms\modules\attendance\record.php:125
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\church-cms\modules\attendance\record.php on line 125
+[04-Sep-2025 23:39:23 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:39:23
+[04-Sep-2025 23:39:30 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:39:30
+[04-Sep-2025 23:39:30 Africa/Nairobi] PHP Fatal error:  Uncaught Error: Call to undefined method Database::inTransaction() in C:\xampp\htdocs\church-cms\modules\attendance\record.php:125
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\church-cms\modules\attendance\record.php on line 125
+[04-Sep-2025 23:39:35 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:39:35
+[04-Sep-2025 23:39:49 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:39:49
+[04-Sep-2025 23:39:53 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:39:53
+[04-Sep-2025 23:39:56 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:39:56
+[04-Sep-2025 23:40:08 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:40:08
+[04-Sep-2025 23:40:14 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:40:14
+[04-Sep-2025 23:40:27 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:40:27
+[04-Sep-2025 23:40:57 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:40:57
+[04-Sep-2025 23:41:04 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:41:04
+[04-Sep-2025 23:41:05 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:41:05
+[04-Sep-2025 23:41:32 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:41:32
+[04-Sep-2025 23:41:34 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:41:34
+[04-Sep-2025 23:41:38 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:41:38
+[04-Sep-2025 23:41:39 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:41:39
+[04-Sep-2025 23:41:43 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:41:43
+[04-Sep-2025 23:42:13 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:42:13
+[04-Sep-2025 23:42:18 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:42:18
+[04-Sep-2025 23:42:24 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:42:24
+[04-Sep-2025 23:42:28 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:42:28
+[04-Sep-2025 23:42:35 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:42:35
+[04-Sep-2025 23:42:38 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:42:38
+[04-Sep-2025 23:42:39 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:42:39
+[04-Sep-2025 23:42:53 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:42:53
+[04-Sep-2025 23:42:55 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:42:55
+[04-Sep-2025 23:43:00 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:43:00
+[04-Sep-2025 23:43:01 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:43:01
+[04-Sep-2025 23:43:05 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:43:05
+[04-Sep-2025 23:43:35 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:43:35
+[04-Sep-2025 23:43:39 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:43:39
+[04-Sep-2025 23:43:44 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:43:44
+[04-Sep-2025 23:43:51 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:43:51
+[04-Sep-2025 23:43:54 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:43:54
+[04-Sep-2025 23:44:03 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:44:03
+[04-Sep-2025 23:44:06 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:44:06
+[04-Sep-2025 23:45:39 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:45:39
+[04-Sep-2025 23:45:41 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:45:41
+[04-Sep-2025 23:48:09 Africa/Nairobi] ✅ Database connected successfully at 2025-09-04 23:48:09
+[08-Sep-2025 00:07:52 Africa/Nairobi] ✅ Database connected successfully at 2025-09-08 00:07:52
+[08-Sep-2025 00:07:52 Africa/Nairobi] ❌ Query execution error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'remember_token' in 'where clause' | Query: SELECT * FROM users WHERE remember_token IS NOT NULL AND is_active = 1
+[08-Sep-2025 00:07:52 Africa/Nairobi] Remember me token error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'remember_token' in 'where clause'
+[08-Sep-2025 00:07:59 Africa/Nairobi] ✅ Database connected successfully at 2025-09-08 00:07:59
+[08-Sep-2025 00:07:59 Africa/Nairobi] ❌ Query execution error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'remember_token' in 'where clause' | Query: SELECT * FROM users WHERE remember_token IS NOT NULL AND is_active = 1
+[08-Sep-2025 00:07:59 Africa/Nairobi] Remember me token error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'remember_token' in 'where clause'
+[08-Sep-2025 00:08:18 Africa/Nairobi] ✅ Database connected successfully at 2025-09-08 00:08:18
+[08-Sep-2025 00:08:18 Africa/Nairobi] Failed login attempt with username: amosmn4@gmail.com from IP: ::1
+[08-Sep-2025 00:08:18 Africa/Nairobi] ❌ Query execution error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'remember_token' in 'where clause' | Query: SELECT * FROM users WHERE remember_token IS NOT NULL AND is_active = 1
+[08-Sep-2025 00:08:18 Africa/Nairobi] Remember me token error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'remember_token' in 'where clause'
+[08-Sep-2025 00:09:37 Africa/Nairobi] ✅ Database connected successfully at 2025-09-08 00:09:37
+[08-Sep-2025 00:09:51 Africa/Nairobi] ✅ Database connected successfully at 2025-09-08 00:09:51
+[08-Sep-2025 00:09:52 Africa/Nairobi] ✅ Database connected successfully at 2025-09-08 00:09:52
+[08-Sep-2025 00:10:28 Africa/Nairobi] ✅ Database connected successfully at 2025-09-08 00:10:28
+[08-Sep-2025 00:10:33 Africa/Nairobi] ✅ Database connected successfully at 2025-09-08 00:10:33
+[08-Sep-2025 00:10:56 Africa/Nairobi] ✅ Database connected successfully at 2025-09-08 00:10:56
+[08-Sep-2025 00:10:56 Africa/Nairobi] ❌ Query execution error: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ?' at line 1 | Query: SELECT COUNT(*) as count FROM members WHERE membership_status = ? AND join_date >= = ?
+[08-Sep-2025 00:10:56 Africa/Nairobi] Error getting record count: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ?' at line 1
+[08-Sep-2025 00:10:56 Africa/Nairobi] ❌ Query execution error: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ?' at line 1 | Query: SELECT COUNT(*) as count FROM visitors WHERE visit_date >= = ?
+[08-Sep-2025 00:10:56 Africa/Nairobi] Error getting record count: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ?' at line 1
+[08-Sep-2025 00:11:39 Africa/Nairobi] ✅ Database connected successfully at 2025-09-08 00:11:39
+[08-Sep-2025 00:11:42 Africa/Nairobi] ✅ Database connected successfully at 2025-09-08 00:11:42
+[08-Sep-2025 00:11:50 Africa/Nairobi] ✅ Database connected successfully at 2025-09-08 00:11:50
+[08-Sep-2025 00:11:50 Africa/Nairobi] ❌ Query execution error: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ?' at line 1 | Query: SELECT COUNT(*) as count FROM members WHERE membership_status = ? AND join_date >= = ?
+[08-Sep-2025 00:11:50 Africa/Nairobi] Error getting record count: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ?' at line 1
+[08-Sep-2025 00:11:50 Africa/Nairobi] ❌ Query execution error: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ?' at line 1 | Query: SELECT COUNT(*) as count FROM visitors WHERE visit_date >= = ?
+[08-Sep-2025 00:11:50 Africa/Nairobi] Error getting record count: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ?' at line 1
+[08-Sep-2025 00:12:43 Africa/Nairobi] ✅ Database connected successfully at 2025-09-08 00:12:43
+[08-Sep-2025 00:14:14 Africa/Nairobi] ✅ Database connected successfully at 2025-09-08 00:14:14
+[08-Sep-2025 00:14:14 Africa/Nairobi] ❌ Query execution error: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ?' at line 1 | Query: SELECT COUNT(*) as count FROM members WHERE membership_status = ? AND join_date >= = ?
+[08-Sep-2025 00:14:14 Africa/Nairobi] Error getting record count: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ?' at line 1
+[08-Sep-2025 00:14:14 Africa/Nairobi] ❌ Query execution error: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ?' at line 1 | Query: SELECT COUNT(*) as count FROM visitors WHERE visit_date >= = ?
+[08-Sep-2025 00:14:14 Africa/Nairobi] Error getting record count: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ?' at line 1
+[08-Sep-2025 00:15:07 Africa/Nairobi] ✅ Database connected successfully at 2025-09-08 00:15:07
+[08-Sep-2025 00:15:07 Africa/Nairobi] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\xampp\htdocs\church-cms\modules\events\index.php on line 146
+[08-Sep-2025 00:15:07 Africa/Nairobi] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\xampp\htdocs\church-cms\modules\events\index.php on line 160
+[08-Sep-2025 00:15:07 Africa/Nairobi] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\xampp\htdocs\church-cms\modules\events\index.php on line 174
+[08-Sep-2025 00:15:27 Africa/Nairobi] ✅ Database connected successfully at 2025-09-08 00:15:27
+[08-Sep-2025 00:15:27 Africa/Nairobi] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\xampp\htdocs\church-cms\modules\events\index.php on line 146
+[08-Sep-2025 00:15:27 Africa/Nairobi] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\xampp\htdocs\church-cms\modules\events\index.php on line 160
+[08-Sep-2025 00:15:27 Africa/Nairobi] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\xampp\htdocs\church-cms\modules\events\index.php on line 174
+[08-Sep-2025 00:15:29 Africa/Nairobi] ✅ Database connected successfully at 2025-09-08 00:15:29
+[08-Sep-2025 00:15:29 Africa/Nairobi] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\xampp\htdocs\church-cms\modules\events\index.php on line 146
+[08-Sep-2025 00:15:29 Africa/Nairobi] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\xampp\htdocs\church-cms\modules\events\index.php on line 160
+[08-Sep-2025 00:15:29 Africa/Nairobi] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\xampp\htdocs\church-cms\modules\events\index.php on line 174
+[08-Sep-2025 00:15:30 Africa/Nairobi] ✅ Database connected successfully at 2025-09-08 00:15:30
+[08-Sep-2025 00:15:30 Africa/Nairobi] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\xampp\htdocs\church-cms\modules\events\index.php on line 146
+[08-Sep-2025 00:15:30 Africa/Nairobi] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\xampp\htdocs\church-cms\modules\events\index.php on line 160
+[08-Sep-2025 00:15:30 Africa/Nairobi] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\xampp\htdocs\church-cms\modules\events\index.php on line 174
+[08-Sep-2025 00:15:31 Africa/Nairobi] ✅ Database connected successfully at 2025-09-08 00:15:31
+[08-Sep-2025 00:15:31 Africa/Nairobi] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\xampp\htdocs\church-cms\modules\events\index.php on line 146
+[08-Sep-2025 00:15:31 Africa/Nairobi] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\xampp\htdocs\church-cms\modules\events\index.php on line 160
+[08-Sep-2025 00:15:31 Africa/Nairobi] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\xampp\htdocs\church-cms\modules\events\index.php on line 174
+[08-Sep-2025 00:15:36 Africa/Nairobi] ✅ Database connected successfully at 2025-09-08 00:15:36
+[08-Sep-2025 00:15:48 Africa/Nairobi] ✅ Database connected successfully at 2025-09-08 00:15:48
+[08-Sep-2025 00:16:11 Africa/Nairobi] ✅ Database connected successfully at 2025-09-08 00:16:11
+[08-Sep-2025 00:16:14 Africa/Nairobi] ✅ Database connected successfully at 2025-09-08 00:16:14
+[08-Sep-2025 00:16:28 Africa/Nairobi] ✅ Database connected successfully at 2025-09-08 00:16:28
+[08-Sep-2025 00:16:34 Africa/Nairobi] ✅ Database connected successfully at 2025-09-08 00:16:34
+[08-Sep-2025 00:16:34 Africa/Nairobi] PHP Warning:  include(reports/summary_report.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\church-cms\modules\attendance\reports.php on line 194
+[08-Sep-2025 00:16:34 Africa/Nairobi] PHP Warning:  include(): Failed opening 'reports/summary_report.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\church-cms\modules\attendance\reports.php on line 194
+[08-Sep-2025 00:17:43 Africa/Nairobi] ✅ Database connected successfully at 2025-09-08 00:17:43
+[08-Sep-2025 00:17:43 Africa/Nairobi] ❌ Query execution error: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ?' at line 1 | Query: SELECT COUNT(*) as count FROM members WHERE membership_status = ? AND join_date >= = ?
+[08-Sep-2025 00:17:43 Africa/Nairobi] Error getting record count: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ?' at line 1
+[08-Sep-2025 00:17:43 Africa/Nairobi] ❌ Query execution error: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ?' at line 1 | Query: SELECT COUNT(*) as count FROM visitors WHERE visit_date >= = ?
+[08-Sep-2025 00:17:43 Africa/Nairobi] Error getting record count: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '= ?' at line 1
+[08-Sep-2025 00:17:46 Africa/Nairobi] ✅ Database connected successfully at 2025-09-08 00:17:46
+[08-Sep-2025 00:18:08 Africa/Nairobi] ✅ Database connected successfully at 2025-09-08 00:18:08
+[09-Sep-2025 08:51:30 Africa/Nairobi] ✅ Database connected successfully at 2025-09-09 08:51:30
+[09-Sep-2025 08:51:31 Africa/Nairobi] PHP Warning:  session_destroy(): Trying to destroy uninitialized session in C:\xampp\htdocs\church-cms\includes\functions.php on line 178
+[09-Sep-2025 08:51:31 Africa/Nairobi] ✅ Database connected successfully at 2025-09-09 08:51:31
+[11-Sep-2025 23:04:48 Africa/Nairobi] ✅ Database connected successfully at 2025-09-11 23:04:48
+[11-Sep-2025 23:04:59 Africa/Nairobi] ✅ Database connected successfully at 2025-09-11 23:04:59
+[11-Sep-2025 23:05:00 Africa/Nairobi] ✅ Database connected successfully at 2025-09-11 23:05:00
+[11-Sep-2025 23:06:40 Africa/Nairobi] ✅ Database connected successfully at 2025-09-11 23:06:40
+[11-Sep-2025 23:06:40 Africa/Nairobi] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\xampp\htdocs\church-cms\modules\events\index.php on line 146
+[11-Sep-2025 23:06:40 Africa/Nairobi] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\xampp\htdocs\church-cms\modules\events\index.php on line 160
+[11-Sep-2025 23:06:40 Africa/Nairobi] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\xampp\htdocs\church-cms\modules\events\index.php on line 174
+[11-Sep-2025 23:06:54 Africa/Nairobi] ✅ Database connected successfully at 2025-09-11 23:06:54
+[11-Sep-2025 23:06:54 Africa/Nairobi] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\xampp\htdocs\church-cms\modules\events\index.php on line 146
+[11-Sep-2025 23:06:54 Africa/Nairobi] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\xampp\htdocs\church-cms\modules\events\index.php on line 160
+[11-Sep-2025 23:06:54 Africa/Nairobi] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\xampp\htdocs\church-cms\modules\events\index.php on line 174
+[11-Sep-2025 23:07:02 Africa/Nairobi] ✅ Database connected successfully at 2025-09-11 23:07:02
+[11-Sep-2025 23:07:02 Africa/Nairobi] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\xampp\htdocs\church-cms\modules\events\index.php on line 146
+[11-Sep-2025 23:07:02 Africa/Nairobi] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\xampp\htdocs\church-cms\modules\events\index.php on line 160
+[11-Sep-2025 23:07:02 Africa/Nairobi] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\xampp\htdocs\church-cms\modules\events\index.php on line 174
+[11-Sep-2025 23:07:07 Africa/Nairobi] ✅ Database connected successfully at 2025-09-11 23:07:07
+[11-Sep-2025 23:07:07 Africa/Nairobi] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\xampp\htdocs\church-cms\modules\events\index.php on line 146
+[11-Sep-2025 23:07:07 Africa/Nairobi] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\xampp\htdocs\church-cms\modules\events\index.php on line 160
+[11-Sep-2025 23:07:07 Africa/Nairobi] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\xampp\htdocs\church-cms\modules\events\index.php on line 174
+[11-Sep-2025 23:07:09 Africa/Nairobi] ✅ Database connected successfully at 2025-09-11 23:07:09
