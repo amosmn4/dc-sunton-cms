@@ -52,9 +52,9 @@ class Database {
             $this->conn = new PDO($dsn, $this->username, $this->password, $options);
 
             // Log successful connection
-            error_log("✅ Database connected successfully at " . date('Y-m-d H:i:s'));
+            error_log("Database connected successfully at " . date('Y-m-d H:i:s'));
         } catch (PDOException $exception) {
-            error_log("❌ Database connection error: " . $exception->getMessage());
+            error_log("Database connection error: " . $exception->getMessage());
 
             if (defined('ENVIRONMENT') && ENVIRONMENT === 'development') {
                 die("Database connection failed: " . $exception->getMessage());

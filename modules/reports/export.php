@@ -1,245 +1,319 @@
 <?php
 /**
- * Report Export Handler
- * Deliverance Church Management System
- * 
- * Handles export of reports in various formats (CSV, Excel, PDF)
+ * Universal Export Handler
+ * Handle all export requests from various modules
  */
 
-// Include configuration and functions
 require_once '../../config/config.php';
 require_once '../../includes/functions.php';
 
-// Check authentication and permissions
 requireLogin();
-if (!hasPermission('reports')) {
-    header('Location: ' . BASE_URL . 'modules/dashboard/?error=access_denied');
-    exit();
-}
 
-// Get export parameters
-$type = sanitizeInput($_GET['type'] ?? '');
-$format = sanitizeInput($_GET['format'] ?? 'csv');
-$reportModule = sanitizeInput($_GET['module'] ?? '');
-
-// Initialize database
 $db = Database::getInstance();
 
-try {
-    switch ($type) {
-        case 'all':
-            exportAllData($db, $format);
-            break;
-        case 'financial':
-            exportFinancialData($db, $format);
-            break;
-        case 'members':
-            exportMembersData($db, $format);
-            break;
-        case 'attendance':
-            exportAttendanceData($db, $format);
-            break;
-        case 'visitors':
-            exportVisitorsData($db, $format);
-            break;
-        case 'equipment':
-            exportEquipmentData($db, $format);
-            break;
-        case 'sms':
-            exportSMSData($db, $format);
-            break;
-        default:
-            setFlashMessage('error', 'Invalid export type specified');
-            header('Location: index.php');
-            exit();
-    }
-} catch (Exception $e) {
-    error_log("Export error: " . $e->getMessage());
-    setFlashMessage('error', 'Export failed: ' . $e->getMessage());
-    header('Location: index.php');
-    exit();
+// Get export parameters
+$type = $_GET['type'] ?? '';
+$format = $_GET['format'] ?? 'excel';
+$startDate = $_GET['start'] ?? date('Y-m-01');
+$endDate = $_GET['end'] ?? date('Y-m-t');
+
+// Export data based on type
+$data = [];
+$headers = [];
+$filename = 'export_' . date('Y-m-d_H-i-s');
+
+switch ($type) {
+    case 'all_members':
+        $filename = 'members_list_' . date('Y-m-d');
+        $headers = ['Member Number', 'Name', 'Phone', 'Email', 'Join Date', 'Status', 'Department'];
+        
+        $stmt = $db->executeQuery("
+            SELECT 
+                m.member_number,
+                CONCAT(m.first_name, ' ', m.last_name) as name,
+                m.phone,
+                m.email,
+                m.join_date,
+                m.membership_status,
+                GROUP_CONCAT(d.name SEPARATOR ', ') as departments
+            FROM members m
+            LEFT JOIN member_departments md ON m.id = md.member_id AND md.is_active = 1
+            LEFT JOIN departments d ON md.department_id = d.id
+            GROUP BY m.id
+            ORDER BY m.first_name, m.last_name
+        ");
+        
+        $results = $stmt->fetchAll();
+        foreach ($results as $row) {
+            $data[] = [
+                $row['member_number'],
+                $row['name'],
+                $row['phone'] ?? '',
+                $row['email'] ?? '',
+                date('M d, Y', strtotime($row['join_date'])),
+                ucfirst($row['membership_status']),
+                $row['departments'] ?? 'None'
+            ];
+        }
+        break;
+        
+    case 'attendance_summary':
+        $filename = 'attendance_summary_' . date('Y-m-d');
+        $headers = ['Date', 'Event', 'Type', 'Attendance Count'];
+        
+        $stmt = $db->executeQuery("
+            SELECT 
+                e.event_date,
+                e.name,
+                e.event_type,
+                COUNT(ar.id) as attendance
+            FROM events e
+            LEFT JOIN attendance_records ar ON e.id = ar.event_id
+            WHERE e.event_date BETWEEN ? AND ?
+            GROUP BY e.id
+            ORDER BY e.event_date DESC
+        ", [$startDate, $endDate]);
+        
+        $results = $stmt->fetchAll();
+        foreach ($results as $row) {
+            $data[] = [
+                date('M d, Y', strtotime($row['event_date'])),
+                $row['name'],
+                ucwords(str_replace('_', ' ', $row['event_type'])),
+                $row['attendance']
+            ];
+        }
+        break;
+        
+    case 'financial_summary':
+        $filename = 'financial_summary_' . date('Y-m-d');
+        $headers = ['Date', 'Type', 'Category', 'Description', 'Amount'];
+        
+        // Income
+        $stmt = $db->executeQuery("
+            SELECT 
+                transaction_date as date,
+                'Income' as type,
+                ic.name as category,
+                description,
+                amount
+            FROM income i
+            JOIN income_categories ic ON i.category_id = ic.id
+            WHERE transaction_date BETWEEN ? AND ?
+            AND status = 'verified'
+            ORDER BY transaction_date DESC
+        ", [$startDate, $endDate]);
+        
+        $incomeResults = $stmt->fetchAll();
+        
+        // Expenses
+        $stmt = $db->executeQuery("
+            SELECT 
+                expense_date as date,
+                'Expense' as type,
+                ec.name as category,
+                description,
+                amount
+            FROM expenses e
+            JOIN expense_categories ec ON e.category_id = ec.id
+            WHERE expense_date BETWEEN ? AND ?
+            AND status = 'paid'
+            ORDER BY expense_date DESC
+        ", [$startDate, $endDate]);
+        
+        $expenseResults = $stmt->fetchAll();
+        
+        // Combine and sort
+        $combined = array_merge($incomeResults, $expenseResults);
+        usort($combined, fn($a, $b) => strtotime($b['date']) - strtotime($a['date']));
+        
+        foreach ($combined as $row) {
+            $data[] = [
+                date('M d, Y', strtotime($row['date'])),
+                $row['type'],
+                $row['category'],
+                $row['description'],
+                'Ksh ' . number_format($row['amount'], 2)
+            ];
+        }
+        break;
+        
+    case 'visitor_list':
+        $filename = 'visitors_list_' . date('Y-m-d');
+        $headers = ['Visitor Number', 'Name', 'Phone', 'Visit Date', 'Status', 'Follow-up'];
+        
+        $stmt = $db->executeQuery("
+            SELECT 
+                v.visitor_number,
+                CONCAT(v.first_name, ' ', v.last_name) as name,
+                v.phone,
+                v.visit_date,
+                v.status,
+                IFNULL(
+                    (SELECT COUNT(*) FROM visitor_followups vf WHERE vf.visitor_id = v.id),
+                    0
+                ) as followup_count
+            FROM visitors v
+            WHERE visit_date BETWEEN ? AND ?
+            ORDER BY visit_date DESC
+        ", [$startDate, $endDate]);
+        
+        $results = $stmt->fetchAll();
+        foreach ($results as $row) {
+            $data[] = [
+                $row['visitor_number'],
+                $row['name'],
+                $row['phone'] ?? '',
+                date('M d, Y', strtotime($row['visit_date'])),
+                ucwords(str_replace('_', ' ', $row['status'])),
+                $row['followup_count'] . ' times'
+            ];
+        }
+        break;
+        
+    case 'equipment_inventory':
+        $filename = 'equipment_inventory_' . date('Y-m-d');
+        $headers = ['Code', 'Name', 'Category', 'Status', 'Purchase Date', 'Value', 'Location'];
+        
+        $stmt = $db->executeQuery("
+            SELECT 
+                e.equipment_code,
+                e.name,
+                ec.name as category,
+                e.status,
+                e.purchase_date,
+                e.purchase_price,
+                e.location
+            FROM equipment e
+            JOIN equipment_categories ec ON e.category_id = ec.id
+            ORDER BY e.name
+        ");
+        
+        $results = $stmt->fetchAll();
+        foreach ($results as $row) {
+            $data[] = [
+                $row['equipment_code'],
+                $row['name'],
+                $row['category'],
+                ucfirst(str_replace('_', ' ', $row['status'])),
+                $row['purchase_date'] ? date('M d, Y', strtotime($row['purchase_date'])) : '-',
+                'Ksh ' . number_format($row['purchase_price'] ?? 0, 2),
+                $row['location'] ?? '-'
+            ];
+        }
+        break;
+        
+    default:
+        die('Invalid export type');
 }
 
-/**
- * Export all system data
- */
-function exportAllData($db, $format) {
-    $timestamp = date('Y-m-d_H-i-s');
-    $filename = "church_cms_full_export_{$timestamp}";
-    
+// Export based on format
+if ($format === 'excel' || $format === 'csv') {
+    // Set headers
     if ($format === 'excel') {
-        exportAllDataExcel($db, $filename);
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment; filename="' . $filename . '.xls"');
     } else {
-        exportAllDataCSV($db, $filename);
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '.csv"');
     }
     
-    logActivity('Exported all system data', null, null, null, ['format' => $format]);
-}
-
-/**
- * Export all data as multiple CSV files in a ZIP
- */
-function exportAllDataCSV($db, $filename) {
-    // Create temporary directory
-    $tempDir = sys_get_temp_dir() . '/church_export_' . uniqid();
-    mkdir($tempDir, 0755, true);
+    // Output headers
+    echo implode("\t", $headers) . "\n";
     
-    try {
-        // Export each module
-        exportMembersToCSV($db, $tempDir . '/members.csv');
-        exportAttendanceToCSV($db, $tempDir . '/attendance.csv');
-        exportFinancialToCSV($db, $tempDir . '/financial.csv');
-        exportVisitorsToCSV($db, $tempDir . '/visitors.csv');
-        exportEquipmentToCSV($db, $tempDir . '/equipment.csv');
-        exportSMSToCSV($db, $tempDir . '/sms_history.csv');
-        exportDepartmentsToCSV($db, $tempDir . '/departments.csv');
-        
-        // Create ZIP file
-        $zipFile = $tempDir . '.zip';
-        $zip = new ZipArchive();
-        
-        if ($zip->open($zipFile, ZipArchive::CREATE) === TRUE) {
-            $files = glob($tempDir . '/*.csv');
-            foreach ($files as $file) {
-                $zip->addFile($file, basename($file));
+    // Output data
+    foreach ($data as $row) {
+        echo implode("\t", $row) . "\n";
+    }
+    
+} elseif ($format === 'pdf') {
+    // For PDF, we'll create a simple HTML that can be printed as PDF
+    ?>
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title><?php echo $filename; ?></title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                font-size: 12px;
             }
-            $zip->close();
-            
-            // Send ZIP file
-            header('Content-Type: application/zip');
-            header('Content-Disposition: attachment; filename="' . $filename . '.zip"');
-            header('Content-Length: ' . filesize($zipFile));
-            
-            readfile($zipFile);
-            
-            // Clean up
-            unlink($zipFile);
-            array_map('unlink', $files);
-            rmdir($tempDir);
-        } else {
-            throw new Exception('Could not create ZIP file');
-        }
-    } catch (Exception $e) {
-        // Clean up on error
-        if (is_dir($tempDir)) {
-            $files = glob($tempDir . '/*');
-            array_map('unlink', $files);
-            rmdir($tempDir);
-        }
-        throw $e;
-    }
+            .header {
+                text-align: center;
+                margin-bottom: 30px;
+                border-bottom: 2px solid #03045e;
+                padding-bottom: 10px;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+            th {
+                background-color: #03045e;
+                color: white;
+                padding: 10px;
+                text-align: left;
+            }
+            td {
+                border: 1px solid #ddd;
+                padding: 8px;
+            }
+            tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+            .footer {
+                margin-top: 30px;
+                text-align: center;
+                font-size: 10px;
+                color: #666;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <h1><?php echo $churchInfo['church_name'] ?? 'Deliverance Church'; ?></h1>
+            <h3><?php echo ucwords(str_replace('_', ' ', $type)); ?></h3>
+            <p>Generated on: <?php echo date('F d, Y h:i A'); ?></p>
+            <?php if ($startDate && $endDate): ?>
+            <p>Period: <?php echo date('M d, Y', strtotime($startDate)); ?> - <?php echo date('M d, Y', strtotime($endDate)); ?></p>
+            <?php endif; ?>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <?php foreach ($headers as $header): ?>
+                    <th><?php echo $header; ?></th>
+                    <?php endforeach; ?>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($data as $row): ?>
+                <tr>
+                    <?php foreach ($row as $cell): ?>
+                    <td><?php echo htmlspecialchars($cell); ?></td>
+                    <?php endforeach; ?>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        
+        <div class="footer">
+            <p>This is a computer-generated report from <?php echo $churchInfo['church_name'] ?? 'Deliverance Church'; ?> Management System</p>
+            <p>&copy; <?php echo date('Y'); ?> - All Rights Reserved</p>
+        </div>
+        
+        <script>
+        // Auto-print for PDF
+        window.onload = function() {
+            window.print();
+        };
+        </script>
+    </body>
+    </html>
+    <?php
 }
 
-/**
- * Export members data to CSV
- */
-function exportMembersToCSV($db, $filename) {
-    $query = "
-        SELECT 
-            m.member_number,
-            m.first_name,
-            m.last_name,
-            m.middle_name,
-            m.date_of_birth,
-            m.age,
-            m.gender,
-            m.marital_status,
-            m.phone,
-            m.email,
-            m.address,
-            m.emergency_contact_name,
-            m.emergency_contact_phone,
-            m.join_date,
-            m.baptism_date,
-            m.membership_status,
-            m.occupation,
-            m.skills,
-            GROUP_CONCAT(DISTINCT d.name SEPARATOR '; ') as departments
-        FROM members m
-        LEFT JOIN member_departments md ON m.id = md.member_id AND md.is_active = 1
-        LEFT JOIN departments d ON md.department_id = d.id
-        GROUP BY m.id
-        ORDER BY m.last_name, m.first_name
-    ";
-    
-    $members = $db->executeQuery($query)->fetchAll();
-    
-    $file = fopen($filename, 'w');
-    
-    // Write headers
-    fputcsv($file, [
-        'Member Number', 'First Name', 'Last Name', 'Middle Name', 'Date of Birth', 'Age',
-        'Gender', 'Marital Status', 'Phone', 'Email', 'Address', 'Emergency Contact Name',
-        'Emergency Contact Phone', 'Join Date', 'Baptism Date', 'Status', 'Occupation',
-        'Skills', 'Departments'
-    ]);
-    
-    // Write data
-    foreach ($members as $member) {
-        fputcsv($file, [
-            $member['member_number'],
-            $member['first_name'],
-            $member['last_name'],
-            $member['middle_name'],
-            $member['date_of_birth'],
-            $member['age'],
-            $member['gender'],
-            $member['marital_status'],
-            $member['phone'],
-            $member['email'],
-            $member['address'],
-            $member['emergency_contact_name'],
-            $member['emergency_contact_phone'],
-            $member['join_date'],
-            $member['baptism_date'],
-            $member['membership_status'],
-            $member['occupation'],
-            $member['skills'],
-            $member['departments']
-        ]);
-    }
-    
-    fclose($file);
-}
-
-/**
- * Export attendance data to CSV
- */
-function exportAttendanceToCSV($db, $filename) {
-    $query = "
-        SELECT 
-            e.name as event_name,
-            e.event_type,
-            e.event_date,
-            e.start_time,
-            m.member_number,
-            m.first_name,
-            m.last_name,
-            ar.check_in_time,
-            ar.check_in_method
-        FROM attendance_records ar
-        JOIN events e ON ar.event_id = e.id
-        LEFT JOIN members m ON ar.member_id = m.id
-        ORDER BY e.event_date DESC, ar.check_in_time DESC
-    ";
-    
-    $attendance = $db->executeQuery($query)->fetchAll();
-    
-    $file = fopen($filename, 'w');
-    
-    // Write headers
-    fputcsv($file, [
-        'Event Name', 'Event Type', 'Event Date', 'Start Time', 'Member Number',
-        'First Name', 'Last Name', 'Check-in Time', 'Check-in Method'
-    ]);
-    
-    // Write data
-    foreach ($attendance as $record) {
-        fputcsv($file, [
-            $record['event_name'],
-            $record['event_type'],
-            $record['event_date'],
-            $record['start_time'],
-            $record['member_number'],
-            $record['first_name'],
-            $record['last_name'],
+exit;
