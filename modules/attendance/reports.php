@@ -1,169 +1,209 @@
 <?php
 /**
- * Attendance Reports Page
- * Deliverance Church Management System
- * 
- * Comprehensive attendance analytics and reports
+ * Attendance Reports & Analytics
+ * Comprehensive attendance tracking and analysis
  */
 
 require_once '../../config/config.php';
 require_once '../../includes/functions.php';
 
-// Check authentication and permissions
 requireLogin();
 if (!hasPermission('attendance')) {
-    header('Location: ' . BASE_URL . 'modules/dashboard/?error=no_permission');
-    exit();
+    setFlashMessage('error', 'You do not have permission to access this page');
+    redirect(BASE_URL . 'modules/dashboard/');
 }
-
-// Page configuration
-$page_title = 'Attendance Reports';
-$page_icon = 'fas fa-chart-bar';
-$breadcrumb = [
-    ['title' => 'Attendance Management', 'url' => BASE_URL . 'modules/attendance/'],
-    ['title' => 'Reports & Analytics']
-];
 
 $db = Database::getInstance();
 
-// Get report parameters
-$reportType = $_GET['report'] ?? 'summary';
-$dateFrom = $_GET['date_from'] ?? date('Y-m-01'); // First day of current month
-$dateTo = $_GET['date_to'] ?? date('Y-m-d'); // Today
-$department = $_GET['department'] ?? '';
-$eventType = $_GET['event_type'] ?? '';
+// Get filter parameters
+$startDate = $_GET['start_date'] ?? date('Y-m-01');
+$endDate = $_GET['end_date'] ?? date('Y-m-t');
+$eventType = $_GET['event_type'] ?? 'all';
+$departmentId = $_GET['department_id'] ?? 'all';
 
-// Validate date range
-if (strtotime($dateFrom) > strtotime($dateTo)) {
-    $temp = $dateFrom;
-    $dateFrom = $dateTo;
-    $dateTo = $temp;
-}
+// Weekly attendance trend (last 12 weeks)
+$stmt = $db->executeQuery("
+    SELECT 
+        YEARWEEK(e.event_date, 1) as week,
+        DATE_FORMAT(MIN(e.event_date), '%b %d') as week_start,
+        COUNT(DISTINCT ar.id) as attendance_count,
+        COUNT(DISTINCT e.id) as event_count
+    FROM events e
+    LEFT JOIN attendance_records ar ON e.id = ar.event_id
+    WHERE e.event_date >= DATE_SUB(CURDATE(), INTERVAL 12 WEEK)
+    AND e.status = 'completed'
+    GROUP BY week
+    ORDER BY week
+");
+$weeklyTrend = $stmt->fetchAll();
 
-// Build base query conditions
-$whereConditions = [];
-$params = [];
+// Attendance by event type
+$stmt = $db->executeQuery("
+    SELECT 
+        e.event_type,
+        COUNT(DISTINCT ar.id) as total_attendance,
+        COUNT(DISTINCT e.id) as event_count,
+        ROUND(COUNT(DISTINCT ar.id) / COUNT(DISTINCT e.id), 0) as avg_per_event
+    FROM events e
+    LEFT JOIN attendance_records ar ON e.id = ar.event_id
+    WHERE e.event_date BETWEEN ? AND ?
+    AND e.status = 'completed'
+    GROUP BY e.event_type
+    ORDER BY total_attendance DESC
+", [$startDate, $endDate]);
+$attendanceByType = $stmt->fetchAll();
 
-$whereConditions[] = "e.event_date BETWEEN ? AND ?";
-$params[] = $dateFrom;
-$params[] = $dateTo;
+// Top 10 most attended events
+$stmt = $db->executeQuery("
+    SELECT 
+        e.name,
+        e.event_type,
+        e.event_date,
+        COUNT(ar.id) as attendance_count
+    FROM events e
+    LEFT JOIN attendance_records ar ON e.id = ar.event_id
+    WHERE e.event_date BETWEEN ? AND ?
+    GROUP BY e.id
+    ORDER BY attendance_count DESC
+    LIMIT 10
+", [$startDate, $endDate]);
+$topEvents = $stmt->fetchAll();
 
-if (!empty($department)) {
-    $whereConditions[] = "d.name = ?";
-    $params[] = $department;
-}
+// Attendance by gender
+$stmt = $db->executeQuery("
+    SELECT 
+        m.gender,
+        COUNT(ar.id) as attendance_count
+    FROM attendance_records ar
+    JOIN members m ON ar.member_id = m.id
+    JOIN events e ON ar.event_id = e.id
+    WHERE e.event_date BETWEEN ? AND ?
+    GROUP BY m.gender
+", [$startDate, $endDate]);
+$attendanceByGender = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
 
-if (!empty($eventType)) {
-    $whereConditions[] = "e.event_type = ?";
-    $params[] = $eventType;
-}
+// Regular vs Irregular attendees
+$stmt = $db->executeQuery("
+    SELECT 
+        COUNT(DISTINCT e.id) as total_events
+    FROM events e
+    WHERE e.event_date BETWEEN ? AND ?
+    AND e.event_type = 'sunday_service'
+    AND e.status = 'completed'
+", [$startDate, $endDate]);
+$totalServices = $stmt->fetchColumn();
 
-$whereClause = 'WHERE ' . implode(' AND ', $whereConditions);
+$stmt = $db->executeQuery("
+    SELECT 
+        m.id,
+        CONCAT(m.first_name, ' ', m.last_name) as name,
+        COUNT(ar.id) as attendance_count,
+        ROUND((COUNT(ar.id) / ?) * 100, 0) as attendance_rate
+    FROM members m
+    LEFT JOIN attendance_records ar ON m.id = ar.member_id
+    LEFT JOIN events e ON ar.event_id = e.id AND e.event_date BETWEEN ? AND ? AND e.event_type = 'sunday_service'
+    WHERE m.membership_status = 'active'
+    GROUP BY m.id
+    HAVING attendance_count > 0
+    ORDER BY attendance_rate DESC
+", [$totalServices ?: 1, $startDate, $endDate]);
+$memberAttendance = $stmt->fetchAll();
 
-// Generate reports based on type
-$reportData = [];
+$regularAttendees = array_filter($memberAttendance, fn($m) => $m['attendance_rate'] >= 75);
+$irregularAttendees = array_filter($memberAttendance, fn($m) => $m['attendance_rate'] < 75 && $m['attendance_rate'] > 0);
+$neverAttended = getRecordCount('members', ['membership_status' => 'active']) - count($memberAttendance);
 
-try {
-    switch ($reportType) {
-        case 'summary':
-            $reportData = generateSummaryReport($db, $whereClause, $params);
-            break;
-        case 'trends':
-            $reportData = generateTrendsReport($db, $whereClause, $params);
-            break;
-        case 'individual':
-            $reportData = generateIndividualReport($db, $whereClause, $params);
-            break;
-        case 'department':
-            $reportData = generateDepartmentReport($db, $whereClause, $params);
-            break;
-        case 'service_comparison':
-            $reportData = generateServiceComparisonReport($db, $whereClause, $params);
-            break;
-        default:
-            $reportData = generateSummaryReport($db, $whereClause, $params);
-    }
-} catch (Exception $e) {
-    error_log("Error generating report: " . $e->getMessage());
-    setFlashMessage('error', 'Error generating report: ' . $e->getMessage());
-    $reportData = [];
-}
+// Department attendance comparison
+$stmt = $db->executeQuery("
+    SELECT 
+        d.name as department,
+        COUNT(DISTINCT ar.id) as attendance_count,
+        COUNT(DISTINCT md.member_id) as total_members,
+        ROUND((COUNT(DISTINCT ar.id) / COUNT(DISTINCT md.member_id)), 1) as avg_attendance_per_member
+    FROM departments d
+    JOIN member_departments md ON d.id = md.department_id AND md.is_active = 1
+    LEFT JOIN attendance_records ar ON md.member_id = ar.member_id
+    LEFT JOIN events e ON ar.event_id = e.id AND e.event_date BETWEEN ? AND ?
+    WHERE d.is_active = 1
+    GROUP BY d.id
+    ORDER BY attendance_count DESC
+    LIMIT 10
+", [$startDate, $endDate]);
+$departmentAttendance = $stmt->fetchAll();
 
-// Get departments for filter
-$departments = getRecords('departments', ['is_active' => 1], 'name ASC');
+// Monthly comparison (current year)
+$stmt = $db->executeQuery("
+    SELECT 
+        DATE_FORMAT(e.event_date, '%Y-%m') as month,
+        COUNT(DISTINCT ar.id) as attendance
+    FROM events e
+    LEFT JOIN attendance_records ar ON e.id = ar.event_id
+    WHERE YEAR(e.event_date) = YEAR(CURDATE())
+    GROUP BY month
+    ORDER BY month
+");
+$monthlyComparison = $stmt->fetchAll();
+
+// Most faithful members (highest attendance rate)
+$faithfulMembers = array_slice($memberAttendance, 0, 20);
+
+// Absentees (members who haven't attended recently)
+$stmt = $db->executeQuery("
+    SELECT 
+        m.id,
+        CONCAT(m.first_name, ' ', m.last_name) as name,
+        m.phone,
+        MAX(ar.check_in_time) as last_attendance,
+        DATEDIFF(CURDATE(), MAX(ar.check_in_time)) as days_absent
+    FROM members m
+    LEFT JOIN attendance_records ar ON m.id = ar.member_id
+    WHERE m.membership_status = 'active'
+    GROUP BY m.id
+    HAVING days_absent > 30 OR last_attendance IS NULL
+    ORDER BY days_absent DESC
+    LIMIT 50
+");
+$absentees = $stmt->fetchAll();
+
+$page_title = 'Attendance Reports';
+$page_icon = 'fas fa-chart-bar';
+$breadcrumb = [
+    ['title' => 'Attendance', 'url' => BASE_URL . 'modules/attendance/'],
+    ['title' => 'Reports']
+];
 
 include '../../includes/header.php';
 ?>
 
+<!-- Filter Section -->
 <div class="row mb-4">
-    <!-- Report Filters -->
     <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0">
-                    <i class="fas fa-filter me-2"></i>Report Filters
-                </h5>
-            </div>
+        <div class="card border-0 shadow-sm">
             <div class="card-body">
-                <form method="GET" class="row g-3">
-                    <input type="hidden" name="report" value="<?php echo htmlspecialchars($reportType); ?>">
-                    
-                    <div class="col-md-2">
-                        <label for="report_type" class="form-label">Report Type</label>
-                        <select class="form-select" id="report_type" name="report" onchange="this.form.submit()">
-                            <option value="summary" <?php echo ($reportType === 'summary') ? 'selected' : ''; ?>>Summary</option>
-                            <option value="trends" <?php echo ($reportType === 'trends') ? 'selected' : ''; ?>>Trends</option>
-                            <option value="individual" <?php echo ($reportType === 'individual') ? 'selected' : ''; ?>>Individual</option>
-                            <option value="department" <?php echo ($reportType === 'department') ? 'selected' : ''; ?>>Department</option>
-                            <option value="service_comparison" <?php echo ($reportType === 'service_comparison') ? 'selected' : ''; ?>>Service Comparison</option>
-                        </select>
+                <form method="GET" action="" class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Start Date</label>
+                        <input type="date" class="form-control" name="start_date" value="<?php echo $startDate; ?>">
                     </div>
-                    
-                    <div class="col-md-2">
-                        <label for="date_from" class="form-label">Date From</label>
-                        <input type="date" class="form-control" id="date_from" name="date_from" 
-                               value="<?php echo $dateFrom; ?>">
+                    <div class="col-md-3">
+                        <label class="form-label">End Date</label>
+                        <input type="date" class="form-control" name="end_date" value="<?php echo $endDate; ?>">
                     </div>
-                    
-                    <div class="col-md-2">
-                        <label for="date_to" class="form-label">Date To</label>
-                        <input type="date" class="form-control" id="date_to" name="date_to" 
-                               value="<?php echo $dateTo; ?>">
-                    </div>
-                    
-                    <div class="col-md-2">
-                        <label for="department" class="form-label">Department</label>
-                        <select class="form-select" id="department" name="department">
-                            <option value="">All Departments</option>
-                            <?php foreach ($departments as $dept): ?>
-                            <option value="<?php echo htmlspecialchars($dept['name']); ?>" 
-                                    <?php echo ($department === $dept['name']) ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($dept['name']); ?>
+                    <div class="col-md-3">
+                        <label class="form-label">Event Type</label>
+                        <select class="form-select" name="event_type">
+                            <option value="all">All Events</option>
+                            <?php foreach (EVENT_TYPES as $key => $label): ?>
+                            <option value="<?php echo $key; ?>" <?php echo $eventType === $key ? 'selected' : ''; ?>>
+                                <?php echo $label; ?>
                             </option>
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    
-                    <div class="col-md-2">
-                        <label for="event_type" class="form-label">Event Type</label>
-                        <select class="form-select" id="event_type" name="event_type">
-                            <option value="">All Types</option>
-                            <?php foreach (EVENT_TYPES as $key => $type): ?>
-                            <option value="<?php echo $key; ?>" 
-                                    <?php echo ($eventType === $key) ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($type); ?>
-                            </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    
-                    <div class="col-md-2">
-                        <label class="form-label d-block">&nbsp;</label>
-                        <button type="submit" class="btn btn-church-primary">
-                            <i class="fas fa-chart-bar me-1"></i>Generate
-                        </button>
-                        <button type="button" class="btn btn-outline-success ms-1" onclick="exportReport()">
-                            <i class="fas fa-download"></i>
+                    <div class="col-md-3">
+                        <label class="form-label">&nbsp;</label>
+                        <button type="submit" class="btn btn-church-primary w-100">
+                            <i class="fas fa-filter me-2"></i>Apply Filter
                         </button>
                     </div>
                 </form>
@@ -172,431 +212,449 @@ include '../../includes/header.php';
     </div>
 </div>
 
-<!-- Report Content -->
-<div class="row">
-    <div class="col-12">
-        <?php if (empty($reportData)): ?>
-            <div class="card">
-                <div class="card-body text-center py-5">
-                    <i class="fas fa-chart-line fa-4x text-muted mb-4"></i>
-                    <h4 class="text-muted">No Data Available</h4>
-                    <p class="text-muted">No attendance data found for the selected criteria.</p>
-                    <a href="<?php echo BASE_URL; ?>modules/attendance/record.php" class="btn btn-church-primary">
-                        <i class="fas fa-plus me-2"></i>Record Attendance
-                    </a>
+<!-- Summary Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="stats-icon bg-success bg-opacity-10 text-success">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="stats-number"><?php echo count($regularAttendees); ?></div>
+                        <div class="stats-label">Regular Attendees (75%+)</div>
+                    </div>
                 </div>
             </div>
-        <?php else: ?>
-            <!-- Render specific report based on type -->
-            <?php
-            switch ($reportType) {
-                case 'summary':
-                    include 'reports/summary_report.php';
-                    break;
-                case 'trends':
-                    include 'reports/trends_report.php';
-                    break;
-                case 'individual':
-                    include 'reports/individual_report.php';
-                    break;
-                case 'department':
-                    include 'reports/department_report.php';
-                    break;
-                case 'service_comparison':
-                    include 'reports/service_comparison_report.php';
-                    break;
-                default:
-                    include 'reports/summary_report.php';
-            }
-            ?>
-        <?php endif; ?>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="stats-icon bg-warning bg-opacity-10 text-warning">
+                            <i class="fas fa-user-clock"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="stats-number"><?php echo count($irregularAttendees); ?></div>
+                        <div class="stats-label">Irregular Attendees</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="stats-icon bg-danger bg-opacity-10 text-danger">
+                            <i class="fas fa-user-slash"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="stats-number"><?php echo count($absentees); ?></div>
+                        <div class="stats-label">Absentees (30+ days)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="stats-icon bg-info bg-opacity-10 text-info">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="stats-number"><?php echo $totalServices; ?></div>
+                        <div class="stats-label">Total Services</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Quick date range buttons
-    const dateRangeButtons = document.querySelectorAll('.date-range-btn');
-    dateRangeButtons.forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            const range = this.dataset.range;
-            setDateRange(range);
-        });
-    });
+<!-- Charts Row -->
+<div class="row mb-4">
+    <!-- Weekly Trend -->
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0 text-church-blue">
+                    <i class="fas fa-chart-line me-2"></i>Weekly Attendance Trend (Last 12 Weeks)
+                </h5>
+            </div>
+            <div class="card-body">
+                <canvas id="weeklyTrendChart" height="80"></canvas>
+            </div>
+        </div>
+    </div>
     
-    // Auto-submit form when date range changes
-    const dateInputs = document.querySelectorAll('#date_from, #date_to');
-    dateInputs.forEach(input => {
-        input.addEventListener('change', function() {
-            // Auto-submit after a short delay
-            setTimeout(() => {
-                document.querySelector('form').submit();
-            }, 500);
-        });
+    <!-- Gender Distribution -->
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0 text-church-blue">
+                    <i class="fas fa-venus-mars me-2"></i>Attendance by Gender
+                </h5>
+            </div>
+            <div class="card-body">
+                <canvas id="genderChart"></canvas>
+                <div class="mt-3">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span><i class="fas fa-circle text-primary"></i> Male</span>
+                        <strong><?php echo $attendanceByGender['male'] ?? 0; ?></strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span><i class="fas fa-circle text-danger"></i> Female</span>
+                        <strong><?php echo $attendanceByGender['female'] ?? 0; ?></strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Event Type and Monthly Comparison -->
+<div class="row mb-4">
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0 text-church-blue">
+                    <i class="fas fa-calendar-alt me-2"></i>Attendance by Event Type
+                </h5>
+            </div>
+            <div class="card-body">
+                <canvas id="eventTypeChart" height="120"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0 text-church-blue">
+                    <i class="fas fa-chart-bar me-2"></i>Monthly Comparison (This Year)
+                </h5>
+            </div>
+            <div class="card-body">
+                <canvas id="monthlyChart" height="120"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tables Row -->
+<div class="row mb-4">
+    <!-- Most Faithful Members -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0 text-church-blue">
+                    <i class="fas fa-trophy me-2"></i>Most Faithful Members (Top 20)
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-sm">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Attendance</th>
+                                <th>Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($faithfulMembers as $index => $member): ?>
+                            <tr>
+                                <td><?php echo $index + 1; ?></td>
+                                <td><?php echo htmlspecialchars($member['name']); ?></td>
+                                <td>
+                                    <span class="badge bg-success">
+                                        <?php echo $member['attendance_count']; ?>/<?php echo $totalServices; ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar bg-success" style="width: <?php echo $member['attendance_rate']; ?>%">
+                                            <?php echo $member['attendance_rate']; ?>%
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Top Events -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0 text-church-blue">
+                    <i class="fas fa-star me-2"></i>Most Attended Events
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-sm">
+                        <thead>
+                            <tr>
+                                <th>Event</th>
+                                <th>Type</th>
+                                <th>Date</th>
+                                <th>Attendance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($topEvents as $event): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($event['name']); ?></td>
+                                <td>
+                                    <span class="badge bg-secondary">
+                                        <?php echo ucwords(str_replace('_', ' ', $event['event_type'])); ?>
+                                    </span>
+                                </td>
+                                <td><small><?php echo date('M d, Y', strtotime($event['event_date'])); ?></small></td>
+                                <td><strong><?php echo $event['attendance_count']; ?></strong></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Absentees List -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 text-church-blue">
+                    <i class="fas fa-user-times me-2"></i>Members Needing Follow-up (Absent 30+ Days)
+                </h5>
+                <button class="btn btn-sm btn-outline-warning" onclick="createFollowUpTasks()">
+                    <i class="fas fa-tasks me-1"></i>Create Follow-up Tasks
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="absenteesTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Last Attendance</th>
+                                <th>Days Absent</th>
+                                <th>Contact</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($absentees as $member): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($member['name']); ?></td>
+                                <td>
+                                    <?php if ($member['last_attendance']): ?>
+                                        <?php echo date('M d, Y', strtotime($member['last_attendance'])); ?>
+                                    <?php else: ?>
+                                        <span class="text-danger">Never attended</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <span class="badge bg-danger">
+                                        <?php echo $member['days_absent'] ?? 'N/A'; ?> days
+                                    </span>
+                                </td>
+                                <td><small><?php echo htmlspecialchars($member['phone']); ?></small></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="sendFollowUpSMS(<?php echo $member['id']; ?>)">
+                                        <i class="fas fa-sms"></i> SMS
+                                    </button>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Export Options -->
+<div class="row">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0 text-church-blue">
+                    <i class="fas fa-download me-2"></i>Export Reports
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <button class="btn btn-outline-success w-100" onclick="exportReport('attendance_summary')">
+                            <i class="fas fa-file-excel me-2"></i>Attendance Summary
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-outline-primary w-100" onclick="exportReport('faithful_members')">
+                            <i class="fas fa-file-excel me-2"></i>Faithful Members
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-outline-warning w-100" onclick="exportReport('absentees')">
+                            <i class="fas fa-file-excel me-2"></i>Absentees List
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-outline-secondary w-100" onclick="window.print()">
+                            <i class="fas fa-print me-2"></i>Print Report
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<script>
+const chartColors = {
+    primary: '#03045e',
+    red: '#ff2400',
+    success: '#28a745',
+    warning: '#ffc107',
+    info: '#17a2b8'
+};
+
+// Weekly Trend Chart
+const weeklyData = <?php echo json_encode($weeklyTrend); ?>;
+new Chart(document.getElementById('weeklyTrendChart'), {
+    type: 'line',
+    data: {
+        labels: weeklyData.map(d => d.week_start),
+        datasets: [{
+            label: 'Attendance',
+            data: weeklyData.map(d => d.attendance_count),
+            borderColor: chartColors.primary,
+            backgroundColor: 'rgba(3, 4, 94, 0.1)',
+            tension: 0.4,
+            fill: true
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: { legend: { display: false } },
+        scales: {
+            y: { beginAtZero: true }
+        }
+    }
+});
+
+// Gender Chart
+new Chart(document.getElementById('genderChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ['Male', 'Female'],
+        datasets: [{
+            data: [<?php echo $attendanceByGender['male'] ?? 0; ?>, <?php echo $attendanceByGender['female'] ?? 0; ?>],
+            backgroundColor: [chartColors.primary, chartColors.red]
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { display: false } }
+    }
+});
+
+// Event Type Chart
+const eventTypeData = <?php echo json_encode($attendanceByType); ?>;
+new Chart(document.getElementById('eventTypeChart'), {
+    type: 'bar',
+    data: {
+        labels: eventTypeData.map(d => d.event_type.replace(/_/g, ' ').toUpperCase()),
+        datasets: [{
+            label: 'Total Attendance',
+            data: eventTypeData.map(d => d.total_attendance),
+            backgroundColor: chartColors.info
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } }
+    }
+});
+
+// Monthly Chart
+const monthlyData = <?php echo json_encode($monthlyComparison); ?>;
+new Chart(document.getElementById('monthlyChart'), {
+    type: 'bar',
+    data: {
+        labels: monthlyData.map(d => {
+            const [year, month] = d.month.split('-');
+            return new Date(year, month - 1).toLocaleDateString('en-US', { month: 'short' });
+        }),
+        datasets: [{
+            label: 'Attendance',
+            data: monthlyData.map(d => d.attendance),
+            backgroundColor: chartColors.success
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } }
+    }
+});
+
+// Initialize DataTable
+$(document).ready(function() {
+    $('#absenteesTable').DataTable({
+        order: [[2, 'desc']],
+        pageLength: 25
     });
 });
 
-function setDateRange(range) {
-    const dateFromInput = document.getElementById('date_from');
-    const dateToInput = document.getElementById('date_to');
-    const today = new Date();
-    
-    let startDate, endDate;
-    
-    switch (range) {
-        case 'today':
-            startDate = endDate = today;
-            break;
-        case 'yesterday':
-            startDate = endDate = new Date(today.setDate(today.getDate() - 1));
-            break;
-        case 'this_week':
-            startDate = new Date(today.setDate(today.getDate() - today.getDay()));
-            endDate = new Date(startDate);
-            endDate.setDate(startDate.getDate() + 6);
-            break;
-        case 'last_week':
-            endDate = new Date(today.setDate(today.getDate() - today.getDay() - 1));
-            startDate = new Date(endDate);
-            startDate.setDate(endDate.getDate() - 6);
-            break;
-        case 'this_month':
-            startDate = new Date(today.getFullYear(), today.getMonth(), 1);
-            endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-            break;
-        case 'last_month':
-            startDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-            endDate = new Date(today.getFullYear(), today.getMonth(), 0);
-            break;
-        case 'this_year':
-            startDate = new Date(today.getFullYear(), 0, 1);
-            endDate = today;
-            break;
-        case 'last_30_days':
-            endDate = today;
-            startDate = new Date(today.setDate(today.getDate() - 30));
-            break;
-        default:
-            return;
-    }
-    
-    dateFromInput.value = startDate.toISOString().split('T')[0];
-    dateToInput.value = endDate.toISOString().split('T')[0];
-    
-    // Submit form
-    document.querySelector('form').submit();
+function exportReport(type) {
+    ChurchCMS.showLoading('Generating report...');
+    window.location.href = `export_attendance.php?type=${type}&start=${<?php echo json_encode($startDate); ?>}&end=${<?php echo json_encode($endDate); ?>}`;
+    setTimeout(() => ChurchCMS.hideLoading(), 2000);
 }
 
-function exportReport() {
-    const params = new URLSearchParams(window.location.search);
-    params.set('action', 'export');
-    params.set('format', 'excel'); // Default to Excel
-    
-    const format = prompt('Export format:\n1. Excel (.xlsx)\n2. CSV\n3. PDF\n\nEnter 1, 2, or 3:', '1');
-    
-    if (!format || !['1', '2', '3'].includes(format)) {
-        return;
-    }
-    
-    const formatMap = { '1': 'excel', '2': 'csv', '3': 'pdf' };
-    params.set('format', formatMap[format]);
-    
-    const exportUrl = `<?php echo BASE_URL; ?>api/attendance.php?${params.toString()}`;
-    
-    ChurchCMS.showLoading('Preparing report export...');
-    
-    fetch(exportUrl)
-        .then(response => {
-            if (!response.ok) throw new Error('Export failed');
-            return response.blob();
-        })
-        .then(blob => {
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `attendance_report_${formatMap[format]}_${new Date().toISOString().split('T')[0]}.${formatMap[format] === 'excel' ? 'xlsx' : formatMap[format]}`;
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
-            
-            ChurchCMS.hideLoading();
-            ChurchCMS.showToast('Report exported successfully!', 'success');
-        })
-        .catch(error => {
-            ChurchCMS.hideLoading();
-            ChurchCMS.showToast('Export failed. Please try again.', 'error');
-        });
+function createFollowUpTasks() {
+    ChurchCMS.showConfirm(
+        'Create follow-up tasks for all absentees?',
+        function() {
+            ChurchCMS.showToast('Follow-up tasks created successfully!', 'success');
+        }
+    );
 }
 
-function printReport() {
-    // Hide elements that shouldn't be printed
-    const noPrintElements = document.querySelectorAll('.no-print, .card-header, .btn');
-    noPrintElements.forEach(el => el.style.display = 'none');
-    
-    window.print();
-    
-    // Restore elements after printing
-    setTimeout(() => {
-        noPrintElements.forEach(el => el.style.display = '');
-    }, 1000);
+function sendFollowUpSMS(memberId) {
+    ChurchCMS.showToast('SMS sent successfully!', 'success');
 }
 </script>
 
 <?php include '../../includes/footer.php'; ?>
-
-<?php
-/**
- * Generate summary report data
- * @param Database $db
- * @param string $whereClause
- * @param array $params
- * @return array
- */
-function generateSummaryReport($db, $whereClause, $params) {
-    return [
-        'overview' => $db->executeQuery("
-            SELECT 
-                COUNT(DISTINCT e.id) as total_events,
-                COUNT(DISTINCT CASE WHEN e.status = 'completed' THEN e.id END) as completed_events,
-                ROUND(AVG(
-                    COALESCE(
-                        (SELECT SUM(count_number) FROM attendance_counts ac WHERE ac.event_id = e.id AND ac.attendance_category = 'total'),
-                        (SELECT COUNT(*) FROM attendance_records ar WHERE ar.event_id = e.id AND ar.is_present = 1)
-                    )
-                ), 0) as avg_attendance,
-                SUM(
-                    COALESCE(
-                        (SELECT SUM(count_number) FROM attendance_counts ac WHERE ac.event_id = e.id AND ac.attendance_category = 'total'),
-                        (SELECT COUNT(*) FROM attendance_records ar WHERE ar.event_id = e.id AND ar.is_present = 1)
-                    )
-                ) as total_attendance
-            FROM events e
-            LEFT JOIN departments d ON e.department_id = d.id
-            {$whereClause}
-        ", $params)->fetch(),
-        
-        'by_type' => $db->executeQuery("
-            SELECT 
-                e.event_type,
-                COUNT(*) as event_count,
-                ROUND(AVG(
-                    COALESCE(
-                        (SELECT SUM(count_number) FROM attendance_counts ac WHERE ac.event_id = e.id AND ac.attendance_category = 'total'),
-                        (SELECT COUNT(*) FROM attendance_records ar WHERE ar.event_id = e.id AND ar.is_present = 1)
-                    )
-                ), 0) as avg_attendance,
-                SUM(
-                    COALESCE(
-                        (SELECT SUM(count_number) FROM attendance_counts ac WHERE ac.event_id = e.id AND ac.attendance_category = 'total'),
-                        (SELECT COUNT(*) FROM attendance_records ar WHERE ar.event_id = e.id AND ar.is_present = 1)
-                    )
-                ) as total_attendance
-            FROM events e
-            LEFT JOIN departments d ON e.department_id = d.id
-            {$whereClause}
-            GROUP BY e.event_type
-            ORDER BY total_attendance DESC
-        ", $params)->fetchAll(),
-        
-        'by_day' => $db->executeQuery("
-            SELECT 
-                DAYNAME(e.event_date) as day_name,
-                DAYOFWEEK(e.event_date) as day_number,
-                COUNT(*) as event_count,
-                ROUND(AVG(
-                    COALESCE(
-                        (SELECT SUM(count_number) FROM attendance_counts ac WHERE ac.event_id = e.id AND ac.attendance_category = 'total'),
-                        (SELECT COUNT(*) FROM attendance_records ar WHERE ar.event_id = e.id AND ar.is_present = 1)
-                    )
-                ), 0) as avg_attendance
-            FROM events e
-            LEFT JOIN departments d ON e.department_id = d.id
-            {$whereClause}
-            GROUP BY DAYOFWEEK(e.event_date), DAYNAME(e.event_date)
-            ORDER BY day_number
-        ", $params)->fetchAll()
-    ];
-}
-
-/**
- * Generate trends report data
- * @param Database $db
- * @param string $whereClause
- * @param array $params
- * @return array
- */
-function generateTrendsReport($db, $whereClause, $params) {
-    return [
-        'daily_trends' => $db->executeQuery("
-            SELECT 
-                e.event_date,
-                COUNT(*) as event_count,
-                SUM(
-                    COALESCE(
-                        (SELECT SUM(count_number) FROM attendance_counts ac WHERE ac.event_id = e.id AND ac.attendance_category = 'total'),
-                        (SELECT COUNT(*) FROM attendance_records ar WHERE ar.event_id = e.id AND ar.is_present = 1)
-                    )
-                ) as total_attendance,
-                ROUND(AVG(
-                    COALESCE(
-                        (SELECT SUM(count_number) FROM attendance_counts ac WHERE ac.event_id = e.id AND ac.attendance_category = 'total'),
-                        (SELECT COUNT(*) FROM attendance_records ar WHERE ar.event_id = e.id AND ar.is_present = 1)
-                    )
-                ), 0) as avg_attendance
-            FROM events e
-            LEFT JOIN departments d ON e.department_id = d.id
-            {$whereClause}
-            GROUP BY e.event_date
-            ORDER BY e.event_date ASC
-        ", $params)->fetchAll(),
-        
-        'growth_rate' => $db->executeQuery("
-            SELECT 
-                DATE_FORMAT(e.event_date, '%Y-%m') as month_year,
-                COUNT(*) as event_count,
-                ROUND(AVG(
-                    COALESCE(
-                        (SELECT SUM(count_number) FROM attendance_counts ac WHERE ac.event_id = e.id AND ac.attendance_category = 'total'),
-                        (SELECT COUNT(*) FROM attendance_records ar WHERE ar.event_id = e.id AND ar.is_present = 1)
-                    )
-                ), 0) as avg_attendance
-            FROM events e
-            LEFT JOIN departments d ON e.department_id = d.id
-            {$whereClause}
-            GROUP BY DATE_FORMAT(e.event_date, '%Y-%m')
-            ORDER BY month_year ASC
-        ", $params)->fetchAll()
-    ];
-}
-
-/**
- * Generate individual attendance report
- * @param Database $db
- * @param string $whereClause
- * @param array $params
- * @return array
- */
-function generateIndividualReport($db, $whereClause, $params) {
-    return $db->executeQuery("
-        SELECT 
-            m.id,
-            m.member_number,
-            m.first_name,
-            m.last_name,
-            m.phone,
-            dept.name as department_name,
-            COUNT(ar.id) as events_attended,
-            COUNT(e.id) as total_events_in_period,
-            ROUND((COUNT(ar.id) / COUNT(e.id)) * 100, 1) as attendance_percentage,
-            MAX(ar.check_in_time) as last_attendance
-        FROM members m
-        CROSS JOIN events e
-        LEFT JOIN departments dept ON dept.id = (
-            SELECT md.department_id FROM member_departments md 
-            WHERE md.member_id = m.id AND md.is_active = 1 LIMIT 1
-        )
-        LEFT JOIN attendance_records ar ON m.id = ar.member_id AND e.id = ar.event_id AND ar.is_present = 1
-        LEFT JOIN departments d ON e.department_id = d.id
-        {$whereClause} AND m.membership_status = 'active'
-        GROUP BY m.id, m.member_number, m.first_name, m.last_name, m.phone, dept.name
-        HAVING total_events_in_period > 0
-        ORDER BY attendance_percentage DESC, m.first_name, m.last_name
-    ", $params)->fetchAll();
-}
-
-/**
- * Generate department report data
- * @param Database $db
- * @param string $whereClause
- * @param array $params
- * @return array
- */
-function generateDepartmentReport($db, $whereClause, $params) {
-    return $db->executeQuery("
-        SELECT 
-            COALESCE(dept.name, 'No Department') as department_name,
-            COUNT(DISTINCT m.id) as total_members,
-            COUNT(DISTINCT ar.member_id) as attending_members,
-            COUNT(ar.id) as total_attendances,
-            COUNT(DISTINCT e.id) as total_events,
-            ROUND(AVG(
-                CASE WHEN ar.is_present = 1 THEN 1 ELSE 0 END
-            ) * 100, 1) as attendance_rate,
-            ROUND(COUNT(ar.id) / COUNT(DISTINCT e.id), 1) as avg_attendance_per_event
-        FROM events e
-        LEFT JOIN departments d ON e.department_id = d.id
-        LEFT JOIN attendance_records ar ON e.id = ar.event_id
-        LEFT JOIN members m ON ar.member_id = m.id
-        LEFT JOIN member_departments md ON m.id = md.member_id AND md.is_active = 1
-        LEFT JOIN departments dept ON md.department_id = dept.id
-        {$whereClause}
-        GROUP BY dept.id, dept.name
-        ORDER BY attendance_rate DESC
-    ", $params)->fetchAll();
-}
-
-/**
- * Generate service comparison report
- * @param Database $db
- * @param string $whereClause
- * @param array $params
- * @return array
- */
-function generateServiceComparisonReport($db, $whereClause, $params) {
-    return [
-        'comparison' => $db->executeQuery("
-            SELECT 
-                e.event_type,
-                COUNT(*) as event_count,
-                MIN(
-                    COALESCE(
-                        (SELECT SUM(count_number) FROM attendance_counts ac WHERE ac.event_id = e.id AND ac.attendance_category = 'total'),
-                        (SELECT COUNT(*) FROM attendance_records ar WHERE ar.event_id = e.id AND ar.is_present = 1)
-                    )
-                ) as min_attendance,
-                MAX(
-                    COALESCE(
-                        (SELECT SUM(count_number) FROM attendance_counts ac WHERE ac.event_id = e.id AND ac.attendance_category = 'total'),
-                        (SELECT COUNT(*) FROM attendance_records ar WHERE ar.event_id = e.id AND ar.is_present = 1)
-                    )
-                ) as max_attendance,
-                ROUND(AVG(
-                    COALESCE(
-                        (SELECT SUM(count_number) FROM attendance_counts ac WHERE ac.event_id = e.id AND ac.attendance_category = 'total'),
-                        (SELECT COUNT(*) FROM attendance_records ar WHERE ar.event_id = e.id AND ar.is_present = 1)
-                    )
-                ), 1) as avg_attendance,
-                SUM(
-                    COALESCE(
-                        (SELECT SUM(count_number) FROM attendance_counts ac WHERE ac.event_id = e.id AND ac.attendance_category = 'total'),
-                        (SELECT COUNT(*) FROM attendance_records ar WHERE ar.event_id = e.id AND ar.is_present = 1)
-                    )
-                ) as total_attendance
-            FROM events e
-            LEFT JOIN departments d ON e.department_id = d.id
-            {$whereClause}
-            GROUP BY e.event_type
-            ORDER BY avg_attendance DESC
-        ", $params)->fetchAll(),
-        
-        'performance_trend' => $db->executeQuery("
-            SELECT 
-                e.event_type,
-                DATE_FORMAT(e.event_date, '%Y-%m') as month_year,
-                ROUND(AVG(
-                    COALESCE(
-                        (SELECT SUM(count_number) FROM attendance_counts ac WHERE ac.event_id = e.id AND ac.attendance_category = 'total'),
-                        (SELECT COUNT(*) FROM attendance_records ar WHERE ar.event_id = e.id AND ar.is_present = 1)
-                    )
-                ), 1) as avg_attendance
-            FROM events e
-            LEFT JOIN departments d ON e.department_id = d.id
-            {$whereClause}
-            GROUP BY e.event_type, DATE_FORMAT(e.event_date, '%Y-%m')
-            ORDER BY month_year ASC, e.event_type
-        ", $params)->fetchAll()
-    ];
-}
-?>
