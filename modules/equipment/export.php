@@ -260,7 +260,7 @@ function exportToPDF($data, $headers, $filename) {
     </body>
     </html>';
     
-    // In a real implementation, you would convert this HTML to PDF
+   
     // For now, we'll output HTML with PDF headers
     echo $html;
 }

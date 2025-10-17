@@ -149,6 +149,18 @@ body {
     margin-left: 60px;
 }
 
+
+/* example: make active links pop in the sidebar */
+#sidebar .nav-link.active {
+    background: rgba(3, 4, 94, 0.1);
+    color: var(--bs-primary);
+    font-weight: 600;
+}
+#sidebar .collapse .nav-link.active {
+    border-left: 3px solid var(--bs-primary);
+}
+
+
 /* =====================================================
    NAVIGATION COMPONENTS
    ===================================================== */
@@ -262,7 +274,7 @@ body {
 
 .card-header h5,
 .card-header h6 {
-    color: white;
+    color: white !important;
     margin-bottom: 0;
 }
 
@@ -559,6 +571,7 @@ body {
 
 .modal-header .modal-title {
     font-weight: 600;
+    color: white !important;
 }
 
 .modal-header .btn-close {
@@ -569,6 +582,7 @@ body {
     border: none;
     padding-top: 0;
 }
+
 
 /* =====================================================
    PAGINATION
@@ -1188,4 +1202,67 @@ body {
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
     }
+}
+
+
+/* Text Color Utilities */
+.text-on-dark {
+    color: white !important;
+}
+
+.text-on-dark-secondary {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.text-on-dark-tertiary {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.text-on-light {
+    color: #03045e !important;
+}
+
+.text-on-light-secondary {
+    color: #6c757d !important;
+}
+
+/* Background Contrast Utilities */
+.bg-dark-gradient {
+    background: linear-gradient(135deg, #03045e 0%, #1e3c72 100%) !important;
+}
+
+.bg-dark-gradient .text-default {
+    color: white !important;
+}
+
+/* Heading Colors */
+h1, h2, h3, h4, h5, h6 {
+    color: #03045e;
+}
+
+.dark-bg h1,
+.dark-bg h2,
+.dark-bg h3,
+.dark-bg h4,
+.dark-bg h5,
+.dark-bg h6 {
+    color: white !important;
+}
+
+/* Paragraph Colors */
+p {
+    color: #333;
+}
+
+.dark-bg p {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Small Text */
+small {
+    color: #6c757d;
+}
+
+.dark-bg small {
+    color: rgba(255, 255, 255, 0.7);
 }

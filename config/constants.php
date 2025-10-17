@@ -498,9 +498,12 @@ define('MAIN_MENU', [
         'url' => 'modules/attendance/',
         'permissions' => ['administrator', 'pastor', 'secretary', 'department_head'],
         'submenu' => [
+            'attendance_overview' => ['title' => 'Attendance Overview', 'url' => 'modules/attendance/'],
             'record_attendance' => ['title' => 'Record Attendance', 'url' => 'modules/attendance/record.php'],
-            'attendance_reports' => ['title' => 'Attendance Reports', 'url' => 'modules/attendance/reports.php'],
-            'events' => ['title' => 'Events', 'url' => 'modules/attendance/events.php']
+            'bulk_attendance' => ['title' => 'Bulk Attendance Record', 'url' => 'modules/attendance/bulk_record.php'],
+            'events' => ['title' => 'Events', 'url' => 'modules/attendance/events.php'],            
+            'attendance_reports' => ['title' => 'Attendance Reports', 'url' => 'modules/attendance/reports.php']
+            
         ]
     ],
     'finance' => [
@@ -509,10 +512,11 @@ define('MAIN_MENU', [
         'url' => 'modules/finance/',
         'permissions' => ['administrator', 'pastor', 'finance_officer'],
         'submenu' => [
+            'finance_overview' => ['title' => 'Finance Overview', 'url' => 'modules/finance/'],
             'income' => ['title' => 'Income', 'url' => 'modules/finance/income.php'],
-            'expenses' => ['title' => 'Expenses', 'url' => 'modules/finance/expenses.php'],
+            'expenses' => ['title' => 'Expenses', 'url' => 'modules/finance/expenses.php'],            
+            'categories' => ['title' => 'Categories', 'url' => 'modules/finance/categories.php'],
             'reports' => ['title' => 'Financial Reports', 'url' => 'modules/finance/reports.php'],
-            'categories' => ['title' => 'Categories', 'url' => 'modules/finance/categories.php']
         ]
     ],
     'equipment' => [
@@ -523,6 +527,7 @@ define('MAIN_MENU', [
         'submenu' => [
             'inventory' => ['title' => 'Inventory', 'url' => 'modules/equipment/'],
             'maintenance' => ['title' => 'Maintenance', 'url' => 'modules/equipment/maintenance.php'],
+            'add_equipment' => ['title' => 'Add Equipment', 'url' => 'modules/equipment/add.php'],
             'reports' => ['title' => 'Equipment Reports', 'url' => 'modules/equipment/reports.php']
         ]
     ],
@@ -532,6 +537,7 @@ define('MAIN_MENU', [
         'url' => 'modules/sms/',
         'permissions' => ['administrator', 'pastor', 'secretary'],
         'submenu' => [
+            'sms_dashboard' => ['title' => 'SMS Dashboard', 'url' => 'modules/sms/'],
             'send_sms' => ['title' => 'Send SMS', 'url' => 'modules/sms/send.php'],
             'templates' => ['title' => 'Templates', 'url' => 'modules/sms/templates.php'],
             'history' => ['title' => 'SMS History', 'url' => 'modules/sms/history.php']

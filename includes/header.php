@@ -222,6 +222,7 @@ $pageTitle = isset($page_title) ? $page_title . ' - ' . $churchInfo['church_name
             padding: 0.65rem 1rem 0.65rem 3rem;
             font-size: 0.85rem;
             font-weight: 400;
+            color: rgba(255, 255, 255, 0.7) !important;
         }
         
         .submenu .nav-link::before {
@@ -235,9 +236,17 @@ $pageTitle = isset($page_title) ? $page_title . ' - ' . $churchInfo['church_name
             transition: all 0.3s ease;
         }
         
-        .submenu .nav-link:hover::before {
+        .submenu .nav-link:hover::before,
+        .submenu .nav-link.active::before {
             background: white;
             transform: scale(1.5);
+        }
+        
+        .submenu .nav-link.active {
+            background: rgba(255, 255, 255, 0.15) !important;
+            color: white !important;
+            border-left: 3px solid var(--church-red);
+            padding-left: calc(3rem - 3px);
         }
         
         .nav-link .chevron {
