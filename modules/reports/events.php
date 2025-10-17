@@ -862,4 +862,146 @@ try {
                     COALESCE(actual_attendance.attendance_count, 0) as actual_attendance,
                     CASE 
                         WHEN e.expected_attendance > 0 THEN 
-                            ROUND((actual_attendance.attendance_count / e
+                            ROUND((actual_attendance.attendance_count / e.expected_attendance) * 100, 1)
+                        ELSE NULL
+                    END as attendance_percentage,
+                    CASE 
+                        WHEN actual_attendance.attendance_count >= e.expected_attendance THEN 'exceeded'
+                        WHEN actual_attendance.attendance_count >= (e.expected_attendance * 0.8) THEN 'good'
+                        WHEN actual_attendance.attendance_count >= (e.expected_attendance * 0.5) THEN 'average'
+                        ELSE 'poor'
+                    END as performance_rating 
+                FROM events e
+                LEFT JOIN (
+                    SELECT event_id, COUNT(*) as attendance_count
+                    FROM attendance_records
+                    GROUP BY event_id
+                ) actual_attendance ON e.id = actual_attendance.event_id
+                WHERE e.event_date BETWEEN ? AND ?  
+                AND e.status = 'completed'
+                ORDER BY attendance_percentage DESC
+            ", [$dateFrom, $dateTo])->fetchAll();
+            $reportData = ["attendance_analysis" => $attendanceAnalysis];
+            break;
+            case "summary":
+                // Event summary report
+                $summaryData = $db->executeQuery("
+                    SELECT 
+                        e.event_type,
+                        COUNT(*) as total_events,
+                        SUM(e.expected_attendance) as total_expected,
+                        COALESCE(SUM(actual_attendance.attendance_count), 0) as total_actual,
+                        CASE 
+                            WHEN SUM(e.expected_attendance) > 0 THEN 
+                                ROUND((COALESCE(SUM(actual_attendance.attendance_count), 0) / SUM(e.expected_attendance)) * 100, 1)
+                            ELSE NULL 
+                        END as overall_attendance_percentage
+                    FROM events e
+                    LEFT JOIN (
+                        SELECT event_id, COUNT(*) as attendance_count
+                        FROM attendance_records
+                        GROUP BY event_id
+                    ) actual_attendance ON e.id = actual_attendance.event_id
+                    WHERE e.event_date BETWEEN ? AND ?
+                    AND e.status = 'completed'
+                    GROUP BY e.event_type
+                ", [$dateFrom, $dateTo])->fetchAll();
+
+                $reportData = ["summary" => $summaryData];
+                break;
+                case "": 
+                    // Events by department
+                    $departmentEvents = $db->executeQuery("
+                        SELECT 
+                            d.name as department_name,
+                            d.department_type,
+                            COUNT(e.id) as total_events,
+                            SUM(CASE WHEN e.status = 'completed' THEN 1 ELSE 0 END) as completed_events,
+                            SUM(CASE WHEN e.status = 'cancelled' THEN 1 ELSE 0 END) as cancelled_events,
+                            COALESCE(SUM(actual_attendance.attendance_count), 0) as total_attendance,
+                            CASE 
+                                WHEN COUNT(e.id) > 0 THEN 
+                                    ROUND(COALESCE(SUM(actual_attendance.attendance_count), 0) / COUNT(e.id), 1)
+                                ELSE 0 
+                            END as avg_attendance
+                        FROM departments d
+                        LEFT JOIN events e ON d.id = e.department_id
+                        LEFT JOIN (
+                            SELECT event_id, COUNT(*) as attendance_count
+                            FROM attendance_records
+                            GROUP BY event_id
+                        ) actual_attendance ON e.id = actual_attendance.event_id
+                        WHERE e.event_date BETWEEN ? AND ?
+                        GROUP BY d.id
+                        ORDER BY total_events DESC
+                    ", [$dateFrom, $dateTo])->fetchAll();
+
+                    $reportData = ["department_events" => $departmentEvents];
+                    break;
+                    case "attendance_analysis":
+                        // Attendance analysis
+                        $attendanceAnalysis = $db->executeQuery("
+                            SELECT 
+                                e.name as event_name,
+                                e.event_type,
+                                e.event_date,
+                                e.expected_attendance,
+                                COALESCE(actual_attendance.attendance_count, 0) as actual_attendance,
+                                CASE 
+                                    WHEN e.expected_attendance > 0 THEN 
+                                        ROUND((actual_attendance.attendance_count / e.expected_attendance) * 100, 1)
+                                    ELSE NULL
+                                END as attendance_percentage,
+                                CASE 
+                                    WHEN actual_attendance.attendance_count >= e.expected_attendance THEN 'exceeded'
+                                    WHEN actual_attendance.attendance_count >= (e.expected_attendance * 0.8) THEN 'good'
+                                    WHEN actual_attendance.attendance_count >= (e.expected_attendance * 0.5) THEN 'average'
+                                    ELSE 'poor'
+                                END as performance_rating 
+                            FROM events e
+                            LEFT JOIN (
+                                SELECT event_id, COUNT(*) as attendance_count
+                                FROM attendance_records
+                                GROUP BY event_id
+                            ) actual_attendance ON e.id = actual_attendance.event_id
+                            WHERE e.event_date BETWEEN ? AND ?  
+                            AND e.status = 'completed'
+                            ORDER BY attendance_percentage DESC
+                        ", [$dateFrom, $dateTo])->fetchAll();
+                        $reportData = ["attendance_analysis" => $attendanceAnalysis];
+                        break;
+                        case "department_events":
+                            $departmentEvents = $db->executeQuery("
+                                SELECT 
+                                    d.name as department_name,
+                                    d.department_type,
+                                    COUNT(e.id) as total_events,
+                                    SUM(CASE WHEN e.status = 'completed' THEN 1 ELSE 0 END) as completed_events,
+                                    SUM(CASE WHEN e.status = 'cancelled' THEN 1 ELSE 0 END) as cancelled_events,
+                                    COALESCE(SUM(actual_attendance.attendance_count), 0) as total_attendance,
+                                    CASE 
+                                        WHEN COUNT(e.id) > 0 THEN 
+                                            ROUND(COALESCE(SUM(actual_attendance.attendance_count), 0) / COUNT(e.id), 1)
+                                        ELSE 0 
+                                    END as avg_attendance
+                                FROM departments d
+                                LEFT JOIN events e ON d.id = e.department_id
+                                LEFT JOIN (
+                                    SELECT event_id, COUNT(*) as attendance_count
+                                    FROM attendance_records
+                                    GROUP BY event_id
+                                ) actual_attendance ON e.id = actual_attendance.event_id
+                                WHERE e.event_date BETWEEN ? AND ?
+                                GROUP BY d.id
+                                ORDER BY total_events DESC
+                            ", [$dateFrom, $dateTo])->fetchAll();
+
+                            $reportData = ["department_events" => $departmentEvents];
+                            break;
+    }
+} catch (Exception $e) {
+    logError('Reports - Events', $e->getMessage());
+    $error_message = 'An error occurred while generating the report. Please try again later.';
+}
+// Render the report page
+include_once '../../includes/header.php';

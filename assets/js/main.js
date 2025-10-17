@@ -696,6 +696,154 @@ ChurchCMS.initDataTable = function(selector, options = {}) {
 };
 
 // =====================================================
+// NAV ACTIVE / OPEN STATE (NEW)
+// =====================================================
+
+/**
+ * Normalize a URL to a comparable path+query (relative to BASE_URL if present)
+ * @param {string} url
+ * @param {boolean} includeQuery
+ */
+ChurchCMS._normalizeUrl = function(url, includeQuery = true) {
+    try {
+        const u = new URL(url, window.location.origin);
+        let basePath = (window.BASE_URL || '').replace(window.location.origin, '');
+        if (basePath && basePath.endsWith('/')) basePath = basePath.slice(0, -1);
+
+        // Strip the app's base path if present
+        let path = u.pathname;
+        if (basePath && path.startsWith(basePath)) path = path.slice(basePath.length);
+
+        // Normalize trailing slash & index.php
+        path = path.replace(/\/+$/, '');
+        path = path.replace(/\/index\.php$/i, '');
+
+        // Optionally include query
+        const query = includeQuery ? (u.search || '') : '';
+        return (path || '/') + query;
+    } catch {
+        // Fallback for weird hrefs (like '#', 'javascript:')
+        return '';
+    }
+};
+
+/**
+ * Return a "match score" between a link href and current URL.
+ * Higher is better. 0 means "not a match".
+ * Supports data-active-pattern (regex) for custom matching.
+ */
+ChurchCMS._matchUrlScore = function(linkEl, currentPathQuery, currentPathOnly) {
+    const href = linkEl.getAttribute('href') || '';
+    if (!href || href[0] === '#' || href.startsWith('javascript:')) return 0;
+
+    // custom regex pattern support (optional)
+    const pattern = linkEl.getAttribute('data-active-pattern');
+    if (pattern) {
+        try {
+            const rx = new RegExp(pattern);
+            if (rx.test(window.location.href)) return 1000; // strongest match
+        } catch (e) {
+            console.warn('Invalid data-active-pattern:', pattern, e);
+        }
+    }
+
+    const linkPathQuery = ChurchCMS._normalizeUrl(href, true);
+    const linkPathOnly  = ChurchCMS._normalizeUrl(href, false);
+
+    let score = 0;
+    if (!linkPathQuery && !linkPathOnly) return 0;
+
+    // Exact (path+query) match
+    if (linkPathQuery && linkPathQuery === currentPathQuery) score = Math.max(score, 500);
+    // Exact (path) match
+    if (linkPathOnly && linkPathOnly === currentPathOnly) score = Math.max(score, 400);
+    // "Starts with" path (module grouping)
+    if (linkPathOnly && currentPathOnly.startsWith(linkPathOnly)) {
+        // reward longer prefixes (deeper modules)
+        score = Math.max(score, 200 + Math.min(150, linkPathOnly.length));
+    }
+
+    return score;
+};
+
+/**
+ * Highlight active nav link and open its parent collapses (supports nested).
+ * @param {string} sidebarSelector
+ */
+ChurchCMS.highlightActiveNav = function(sidebarSelector = '#sidebar') {
+    const sidebar = document.querySelector(sidebarSelector);
+    if (!sidebar) return;
+
+    const currentPathQuery = ChurchCMS._normalizeUrl(window.location.href, true);
+    const currentPathOnly  = ChurchCMS._normalizeUrl(window.location.href, false);
+
+    const links = sidebar.querySelectorAll('a.nav-link[href]');
+    let best = { el: null, score: 0 };
+
+    links.forEach((a) => {
+        const score = ChurchCMS._matchUrlScore(a, currentPathQuery, currentPathOnly);
+        if (score > best.score) best = { el: a, score };
+    });
+
+    if (!best.el) return;
+
+    // Remove previous active states
+    sidebar.querySelectorAll('.nav-link.active').forEach(el => el.classList.remove('active'));
+    sidebar.querySelectorAll('.nav-item.active').forEach(el => el.classList.remove('active'));
+
+    // Mark the best link active
+    best.el.classList.add('active');
+    const li = best.el.closest('.nav-item');
+    if (li) li.classList.add('active');
+
+    // If inside a collapse, open all ancestor collapses
+    const openParents = (el) => {
+        const collapse = el.closest('.collapse');
+        if (!collapse) return;
+        collapse.classList.add('show');
+
+        // Find the toggler that controls this collapse
+        const id = collapse.id ? ('#' + collapse.id) : null;
+        if (id) {
+            const toggler = sidebar.querySelector(`[data-bs-toggle="collapse"][data-bs-target="${id}"], a[href="${id}"]`);
+            if (toggler) {
+                toggler.classList.add('active');
+                toggler.setAttribute('aria-expanded', 'true');
+                const togglerItem = toggler.closest('.nav-item');
+                if (togglerItem) togglerItem.classList.add('active');
+            }
+        }
+        // Recurse up for nested menus
+        openParents(collapse.parentElement);
+    };
+
+    // If the best link toggles a collapse, open its target too
+    const target = best.el.getAttribute('data-bs-target');
+    if (target && target.startsWith('#')) {
+        const collapse = sidebar.querySelector(target);
+        if (collapse) {
+            collapse.classList.add('show');
+            best.el.classList.add('active');
+            best.el.setAttribute('aria-expanded', 'true');
+        }
+    }
+
+    openParents(best.el);
+};
+
+/**
+ * Re-run highlight when sidebar content is loaded dynamically (optional).
+ */
+ChurchCMS.observeSidebarForActiveState = function(sidebarSelector = '#sidebar') {
+    const sidebar = document.querySelector(sidebarSelector);
+    if (!sidebar || !window.MutationObserver) return;
+    const mo = new MutationObserver(ChurchCMS.debounce(() => {
+        ChurchCMS.highlightActiveNav(sidebarSelector);
+    }, 100));
+    mo.observe(sidebar, { childList: true, subtree: true });
+};
+
+// =====================================================
 // NOTIFICATION SYSTEM
 // =====================================================
 
@@ -871,6 +1019,10 @@ ChurchCMS.init = function() {
             mainContent.classList.add('sidebar-open');
         }
     }
+
+    // NEW: Highlight active module/submodule in sidebar
+    ChurchCMS.highlightActiveNav('#sidebar');
+    ChurchCMS.observeSidebarForActiveState('#sidebar');
     
     // Handle mobile sidebar close on overlay click
     document.addEventListener('click', function(e) {
