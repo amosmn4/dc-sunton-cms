@@ -94,6 +94,7 @@
                                 <li><strong>Version:</strong> 1.0.0</li>
                                 <li><strong>Release Date:</strong> January 2025</li>
                                 <li><strong>PHP Version:</strong> <?php echo PHP_VERSION; ?></li>
+                                <li><strong>Developed By:</strong> Amos Nyamai - 0745600377</li>
                                 <li><strong>Database:</strong> MySQL</li>
                             </ul>
                         </div>
